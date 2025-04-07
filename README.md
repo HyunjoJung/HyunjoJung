@@ -58,8 +58,8 @@
 
 ## 📚 Research
 
-📄 [아파트 가격 예측 (CNN 기반)](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11784072)  
-📄 [뮤직카우 LSTM 예측](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11189989)
+📄 [아파트 가격 예측 논문(CNN 기반)](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11784072)  
+📄 [뮤직카우 LSTM 예측 논문](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11189989)
 
 ---
 
