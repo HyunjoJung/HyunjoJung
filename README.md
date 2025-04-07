@@ -84,6 +84,10 @@
 
 ---
 
+## 🧠 Algorithm
+
+[![Solved.ac Profile](http://mazassumnida.wtf/api/generate_badge?boj=mrjung0987)](https://solved.ac/profile/mrjung0987)
+
 ## 📈 GitHub Stats
 
 ![HyunjoJung's GitHub stats](https://github-readme-stats.vercel.app/api?username=HyunjoJung&show_icons=true&theme=tokyonight)
