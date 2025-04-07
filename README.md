@@ -19,7 +19,6 @@
 ## 📞 Contact
 
 [![Gmail](https://img.shields.io/badge/Gmail-j96263732@gmail.com-red?style=flat-square&logo=gmail)](mailto:j96263732@gmail.com)
-[![Phone](https://img.shields.io/badge/TEL-010--9626--3732-black?style=flat-square&logo=telegram)](tel:01096263732)
 [![GitHub](https://img.shields.io/badge/GitHub-HyunjoJung-181717?style=flat-square&logo=github)](https://github.com/HyunjoJung)
 
 ---
