@@ -3,7 +3,6 @@
 > 🐞 "Bug는 고치면 되지만, 성장 없는 하루는 Rollback이 안 된다고 믿는 개발자 정현조입니다."
 
 ![GitHub Banner](https://img.shields.io/badge/Backend%20Developer-Python%20%7C%20AI-blueviolet?style=for-the-badge&logo=python&logoColor=white)
-![GitHub Banner](https://img.shields.io/badge/Now@이지에이아이(Researcher)-informational?style=for-the-badge&logo=scikitlearn&logoColor=white)
 ![GitHub Banner](https://img.shields.io/badge/SSAFY_11기-수료-0f7cc0?style=for-the-badge&logo=samsung&logoColor=white)
 
 ---
