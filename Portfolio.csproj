@@ -21,4 +21,11 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Portfolio.Tests\**" />
+    <Content Remove="Portfolio.Tests\**" />
+    <EmbeddedResource Remove="Portfolio.Tests\**" />
+    <None Remove="Portfolio.Tests\**" />
+  </ItemGroup>
+
 </Project>
