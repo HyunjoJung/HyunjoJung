@@ -1,0 +1,352 @@
+@page "/"
+@using Portfolio.Services
+@inject TerminalCommandService CommandService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Hyunjo Jung - Developer Portfolio</PageTitle>
+
+<HeadContent>
+    <meta name="description" content="Hyunjo Jung's developer portfolio and blog" />
+    <meta name="keywords" content="developer, portfolio, blog, hyunjo jung" />
+</HeadContent>
+
+<div class="terminal-container">
+    <div class="terminal-header">
+        <span class="terminal-title">hyunjo@@dev:~$ cat README.md</span>
+        <div class="terminal-controls">
+            <span class="control-btn close"></span>
+            <span class="control-btn minimize"></span>
+            <span class="control-btn maximize"></span>
+        </div>
+    </div>
+
+    <div class="terminal-body">
+        <div class="command-line">
+            <span class="prompt">hyunjo@@dev</span>
+            <span class="path">~</span>
+            <span class="cursor">$</span>
+            <span class="command">cat README.md</span>
+        </div>
+
+        <div class="welcome-section">
+            <pre class="ascii-art">
+██╗  ██╗██╗   ██╗██╗   ██╗███╗   ██╗     ██╗ ██████╗
+██║  ██║╚██╗ ██╔╝██║   ██║████╗  ██║     ██║██╔═══██╗
+███████║ ╚████╔╝ ██║   ██║██╔██╗ ██║     ██║██║   ██║
+██╔══██║  ╚██╔╝  ██║   ██║██║╚██╗██║██   ██║██║   ██║
+██║  ██║   ██║   ╚██████╔╝██║ ╚████║╚█████╔╝╚██████╔╝
+╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝ ╚════╝  ╚═════╝
+            </pre>
+
+            <div class="intro">
+                <h1><span class="hash">#</span> Welcome to my terminal</h1>
+                <p class="description">Developer, Blogger, Open Source Enthusiast</p>
+            </div>
+
+            <div class="directory-listing">
+                <div class="command-line">
+                    <span class="prompt">hyunjo@@dev</span>
+                    <span class="path">~</span>
+                    <span class="cursor">$</span>
+                    <span class="command">ls -la</span>
+                </div>
+
+                <div class="file-list">
+                    <div class="file-item directory" @onclick='() => Navigation.NavigateTo("/blog")'>
+                        <span class="permissions">drwxr-xr-x</span>
+                        <span class="size">4.0K</span>
+                        <span class="date">Dec 02 18:00</span>
+                        <span class="name directory-name">blog/</span>
+                        <span class="description">Technical articles and tutorials</span>
+                    </div>
+                    <div class="file-item directory" @onclick='() => Navigation.NavigateTo("/about")'>
+                        <span class="permissions">drwxr-xr-x</span>
+                        <span class="size">4.0K</span>
+                        <span class="date">Dec 02 18:00</span>
+                        <span class="name directory-name">about/</span>
+                        <span class="description">About me and my experience</span>
+                    </div>
+                    <div class="file-item file">
+                        <span class="permissions">-rw-r--r--</span>
+                        <span class="size">1.2K</span>
+                        <span class="date">Dec 02 18:00</span>
+                        <span class="name file-name">README.md</span>
+                        <span class="description">You are here</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-commands">
+                <div class="command-hint">
+                    <span class="hint-label">Quick commands:</span>
+                    <div class="hints">
+                        <code>cd blog</code> <span class="hint-desc">Browse articles</span>
+                        <code>cd about</code> <span class="hint-desc">Learn about me</span>
+                        <code>help</code> <span class="hint-desc">Show all commands</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-input-section">
+            <div class="command-line">
+                <span class="prompt">hyunjo@@dev</span>
+                <span class="path">~</span>
+                <span class="cursor">$</span>
+                <input type="text"
+                       class="terminal-input"
+                       @bind="terminalInput"
+                       @bind:event="oninput"
+                       @onkeydown="HandleTerminalKeyDown"
+                       @ref="terminalInputElement"
+                       placeholder="Type 'help' or 'cd blog'..."
+                       autocomplete="off"
+                       spellcheck="false" />
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(commandOutput))
+        {
+            <div class="command-output">
+                <pre>@commandOutput</pre>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .welcome-section {
+        margin: 1.5rem 0;
+    }
+
+    .ascii-art {
+        color: var(--term-green);
+        font-size: 10px;
+        line-height: 1.2;
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    .intro {
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .intro h1 {
+        color: var(--term-fg);
+        font-size: 24px;
+        margin: 1rem 0;
+    }
+
+    .hash {
+        color: var(--term-green);
+    }
+
+    .description {
+        color: var(--term-cyan);
+        font-size: 14px;
+        margin: 0.5rem 0;
+    }
+
+    .directory-listing {
+        margin: 2rem 0;
+    }
+
+    .file-list {
+        margin: 1rem 0;
+        font-family: 'Courier New', monospace;
+    }
+
+    .file-item {
+        display: grid;
+        grid-template-columns: 110px 60px 110px 150px 1fr;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        margin: 0.5rem 0;
+        background: rgba(68, 71, 90, 0.2);
+        border-radius: 4px;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+
+    .file-item.directory {
+        cursor: pointer;
+        border-left: 3px solid var(--term-blue);
+    }
+
+    .file-item.directory:hover {
+        background: rgba(68, 71, 90, 0.4);
+        border-left-color: var(--term-green);
+        transform: translateX(4px);
+    }
+
+    .file-item.file {
+        border-left: 3px solid var(--term-purple);
+    }
+
+    .permissions {
+        color: var(--term-yellow);
+    }
+
+    .size {
+        color: var(--term-purple);
+    }
+
+    .date {
+        color: var(--term-cyan);
+    }
+
+    .name {
+        font-weight: 600;
+    }
+
+    .directory-name {
+        color: var(--term-blue);
+    }
+
+    .file-name {
+        color: var(--term-fg);
+    }
+
+    .file-item .description {
+        color: #6272a4;
+        font-size: 12px;
+        text-align: left;
+    }
+
+    .quick-commands {
+        margin: 3rem 0 2rem;
+        padding: 1.5rem;
+        background: rgba(68, 71, 90, 0.2);
+        border-left: 3px solid var(--term-green);
+        border-radius: 4px;
+    }
+
+    .hint-label {
+        color: var(--term-yellow);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .hints {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .hints code {
+        background: rgba(98, 114, 164, 0.2);
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        color: var(--term-cyan);
+        font-size: 13px;
+        margin-right: 1rem;
+        display: inline-block;
+        min-width: 120px;
+    }
+
+    .hint-desc {
+        color: var(--term-fg);
+        opacity: 0.7;
+        font-size: 13px;
+    }
+
+    .terminal-input-section {
+        margin-top: 2rem;
+        background: transparent;
+    }
+
+    .terminal-input-section .command-line {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+    }
+
+    .terminal-input {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #44475a;
+        color: #f1fa8c;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        outline: none;
+        padding: 4px 8px;
+        margin: 0;
+        width: 70%;
+        transition: border-color 0.3s;
+    }
+
+    .terminal-input:focus {
+        border-bottom-color: #bd93f9;
+    }
+
+    .terminal-input::placeholder {
+        color: #6272a4;
+    }
+
+    .command-output {
+        background: transparent;
+        border-left: 2px solid #6272a4;
+        padding: 0.5rem 0 0.5rem 1rem;
+        margin: 0.5rem 0 1rem 0;
+        color: #8be9fd;
+    }
+
+    .command-output pre {
+        margin: 0;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    @@media (max-width: 768px) {
+        .file-item {
+            grid-template-columns: 1fr;
+            gap: 0.25rem;
+        }
+
+        .ascii-art {
+            font-size: 8px;
+        }
+
+        .hints {
+            flex-direction: column;
+        }
+
+        .hints code {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+    }
+</style>
+
+@code {
+    private string terminalInput = string.Empty;
+    private ElementReference terminalInputElement;
+    private string commandOutput = string.Empty;
+
+    private async Task HandleTerminalKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(terminalInput))
+        {
+            var command = terminalInput.Trim();
+            terminalInput = string.Empty;
+
+            var result = await CommandService.ExecuteCommandAsync(command, "/");
+
+            if (!string.IsNullOrEmpty(result.NavigateTo))
+            {
+                Navigation.NavigateTo(result.NavigateTo);
+            }
+            else if (!string.IsNullOrEmpty(result.Output))
+            {
+                commandOutput = result.Output;
+            }
+        }
+    }
+}

@@ -1,0 +1,471 @@
+@page "/blog/{Slug}"
+@using Portfolio.Services
+@using Portfolio.Models
+@inject BlogService BlogService
+@inject ViewCountService ViewCountService
+@inject CommentService CommentService
+@inject TerminalCommandService CommandService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+@implements IDisposable
+
+@if (post != null)
+{
+    <PageTitle>@post.Title - Hyunjo Jung</PageTitle>
+
+    <!-- SEO Meta Tags -->
+    <HeadContent>
+        <meta name="description" content="@post.Description" />
+        <meta name="keywords" content="@string.Join(", ", post.Tags)" />
+        <meta name="author" content="@post.Author" />
+        <meta property="og:title" content="@post.Title" />
+        <meta property="og:description" content="@post.Description" />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="@($"https://hyunjo.uk/blog/{Slug}")" />
+        <meta property="og:image" content="@(post.ImageUrl ?? "https://hyunjo.uk/og-image.jpg")" />
+        <meta property="article:published_time" content="@post.PublishedDate.ToString("o")" />
+        @foreach (var tag in post.Tags)
+        {
+            <meta property="article:tag" content="@tag" />
+        }
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="@post.Title" />
+        <meta name="twitter:description" content="@post.Description" />
+        <meta name="twitter:image" content="@(post.ImageUrl ?? "https://hyunjo.uk/og-image.jpg")" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="@($"https://hyunjo.uk/blog/{Slug}")" />
+
+        <!-- Structured Data (JSON-LD) -->
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "BlogPosting",
+            "headline": "@post.Title",
+            "description": "@post.Description",
+            "image": ["@(post.ImageUrl ?? "https://hyunjo.uk/og-image.jpg")"],
+            "datePublished": "@post.PublishedDate.ToString("yyyy-MM-dd")",
+            "author": {
+                "@@type": "Person",
+                "name": "@post.Author",
+                "url": "https://hyunjo.uk/about"
+            },
+            "publisher": {
+                "@@type": "Organization",
+                "name": "Hyunjo Jung",
+                "logo": {
+                    "@@type": "ImageObject",
+                    "url": "https://hyunjo.uk/favicon.png"
+                }
+            },
+            "mainEntityOfPage": {
+                "@@type": "WebPage",
+                "@@id": "@($"https://hyunjo.uk/blog/{Slug}")"
+            }
+        }
+        </script>
+    </HeadContent>
+
+    <div class="terminal-container blog-post-container">
+        <div class="terminal-header">
+            <span class="terminal-title">hyunjo@@dev:~$ cat blog/@(Slug).md</span>
+            <div class="terminal-controls">
+                <span class="control-btn close" @onclick="NavigateBack"></span>
+                <span class="control-btn minimize"></span>
+                <span class="control-btn maximize"></span>
+            </div>
+        </div>
+
+        <div class="terminal-body">
+            <div class="command-line">
+                <span class="prompt">hyunjo@@dev</span>
+                <span class="path">~/blog</span>
+                <span class="cursor">$</span>
+                <span class="command">cat @(Slug).md</span>
+            </div>
+
+            <article class="blog-post">
+                <header class="post-header">
+                    <div class="post-meta-line">
+                        <span class="meta-item">
+                            <span class="meta-label">date:</span>
+                            <span class="meta-value">@post.PublishedDate.ToString("yyyy-MM-dd HH:mm")</span>
+                        </span>
+                        <span class="meta-item">
+                            <span class="meta-label">author:</span>
+                            <span class="meta-value">@post.Author</span>
+                        </span>
+                        <span class="meta-item">
+                            <span class="meta-label">read_time:</span>
+                            <span class="meta-value">~@post.ReadTimeMinutes min</span>
+                        </span>
+                        <span class="meta-item">
+                            <span class="meta-label">views:</span>
+                            <span class="meta-value views-count">@viewCount</span>
+                        </span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(post.ImageUrl))
+                    {
+                        <div class="post-banner-container">
+                            <img src="@post.ImageUrl" alt="@post.Title" class="post-banner-image" />
+                        </div>
+                    }
+
+                    <h1 class="post-title-main">
+                        <span class="hash">#</span> @post.Title
+                    </h1>
+
+                    <p class="post-description-main">@post.Description</p>
+
+                    <div class="post-tags-main">
+                        <span class="tags-label">tags:</span>
+                        @foreach (var tag in post.Tags)
+                        {
+                            <a href="/blog/tag/@tag" class="tag">@@@tag</a>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(post.Category))
+                    {
+                        <div class="post-category-main">
+                            <span class="category-label">category:</span>
+                            <span class="category">@post.Category</span>
+                        </div>
+                    }
+                </header>
+
+                <div class="post-content markdown-body">
+                    @((MarkupString)post.Content)
+                </div>
+
+                <footer class="post-footer">
+                    <div class="footer-divider">─────────────────────────────────────────────</div>
+                    <div class="footer-meta">
+                        <span>EOF</span>
+                        <span class="back-link" @onclick="NavigateBack">← Back to Blog</span>
+                    </div>
+                </footer>
+            </article>
+
+            @* Comments Section *@
+            <section class="comments-section">
+                <div class="command-line">
+                    <span class="prompt">hyunjo@@dev</span>
+                    <span class="path">~/blog/@Slug</span>
+                    <span class="cursor">$</span>
+                    <span class="command">ls comments/</span>
+                </div>
+
+                <div class="comments-header">
+                    <span class="prompt">#</span> Comments (@comments.Count)
+                    <span class="comment-hint">Use 'comment "your message"' to add a comment</span>
+                </div>
+
+                @if (comments.Any())
+                {
+                    <div class="comments-list">
+                        @foreach (var comment in comments)
+                        {
+                            <div class="comment-item @(comment.IsAuthor ? "author" : "")">
+                                <div class="comment-meta">
+                                    <span class="comment-user">
+                                        @comment.Username@@github @(comment.IsAuthor ? "[AUTHOR]" : "")
+                                    </span>
+                                    <span class="comment-time">@comment.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+                                </div>
+                                <div class="comment-content">
+                                    > @comment.Content
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="no-comments">
+                        No comments yet. Be the first to comment!
+                    </div>
+                }
+            </section>
+
+            <div class="terminal-input-section">
+                <div class="command-line">
+                    <span class="prompt">hyunjo@@dev</span>
+                    <span class="path">~/blog/@Slug</span>
+                    <span class="cursor">$</span>
+                    <input type="text"
+                           class="terminal-input"
+                           @bind="terminalInput"
+                           @bind:event="oninput"
+                           @onkeydown="HandleTerminalKeyDown"
+                           @ref="terminalInputElement"
+                           placeholder="Type 'comment \"your message\"' or 'help'..."
+                           autocomplete="off"
+                           spellcheck="false" />
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(commandOutput))
+            {
+                <div class="command-output">
+                    <pre>@commandOutput</pre>
+                </div>
+            }
+        </div>
+    </div>
+
+    <style>
+        .terminal-input-section {
+            margin-top: 2rem;
+            background: transparent;
+        }
+
+        .terminal-input-section .command-line {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #44475a;
+            color: #f1fa8c;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            outline: none;
+            padding: 4px 8px;
+            margin: 0;
+            width: 70%;
+            transition: border-color 0.3s;
+        }
+
+        .terminal-input:focus {
+            border-bottom-color: #bd93f9;
+        }
+
+        .terminal-input::placeholder {
+            color: #6272a4;
+        }
+
+        .terminal-input-section .cursor-block {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+            font-size: 18px;
+        }
+
+        .comments-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            background: transparent;
+        }
+
+        .comments-header {
+            color: #50fa7b;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: transparent;
+        }
+
+        .comment-hint {
+            font-size: 0.875rem;
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .comments-list {
+            margin: 1.5rem 0;
+            background: transparent;
+        }
+
+        .comment-item {
+            background: #282a36;
+            border-left: 3px solid #6272a4;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .comment-item.author {
+            border-left-color: #50fa7b;
+            background: #2a2d39;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .comment-user {
+            color: #8be9fd;
+            font-weight: bold;
+        }
+
+        .comment-time {
+            color: #6272a4;
+        }
+
+        .comment-content {
+            color: #f8f8f2;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .no-comments {
+            color: #6272a4;
+            font-style: italic;
+            padding: 2rem;
+            text-align: center;
+            background: transparent;
+        }
+
+        .command-output {
+            background: transparent;
+            border-left: 2px solid #6272a4;
+            padding: 0.5rem 0 0.5rem 1rem;
+            margin: 0.5rem 0 1rem 0;
+            color: #8be9fd;
+        }
+
+        .command-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+}
+else if (isLoading)
+{
+    <div class="terminal-container">
+        <div class="terminal-body">
+            <div class="loading">
+                <p class="loading-text">[Loading post...]</p>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="terminal-container">
+        <div class="terminal-body">
+            <div class="error-message">
+                <pre>
+ERROR 404: Post not found
+─────────────────────────
+The requested post '@Slug' does not exist.
+                </pre>
+                <a href="/blog" class="back-link">← Back to Blog</a>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Slug { get; set; } = string.Empty;
+
+    private BlogPost? post;
+    private bool isLoading = true;
+    private int viewCount = 0;
+    private List<Comment> comments = new();
+    private string terminalInput = string.Empty;
+    private ElementReference terminalInputElement;
+    private string commandOutput = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPostAsync();
+        LoadComments();
+
+        // Subscribe to comment changes for real-time updates
+        CommentService.OnCommentsChanged += OnCommentsUpdated;
+
+        isLoading = false;
+    }
+
+    private async Task HandleTerminalKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(terminalInput))
+        {
+            var command = terminalInput.Trim();
+            terminalInput = string.Empty;
+
+            var result = await CommandService.ExecuteCommandAsync(command, $"/blog/{Slug}");
+
+            if (!string.IsNullOrEmpty(result.NavigateTo))
+            {
+                Navigation.NavigateTo(result.NavigateTo);
+            }
+            else if (!string.IsNullOrEmpty(result.Output))
+            {
+                // Reload comments if comment was added
+                if (command.StartsWith("comment", StringComparison.OrdinalIgnoreCase))
+                {
+                    LoadComments();
+                    StateHasChanged();
+                }
+
+                // Show output below terminal
+                commandOutput = result.Output;
+            }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!isLoading)
+        {
+            isLoading = true;
+            await LoadPostAsync();
+            LoadComments();
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadPostAsync()
+    {
+        post = await BlogService.GetPostBySlugAsync(Slug);
+
+        if (post != null)
+        {
+            // Increment view count when post is loaded
+            viewCount = ViewCountService.IncrementViewCount(Slug);
+        }
+    }
+
+    private void LoadComments()
+    {
+        if (!string.IsNullOrEmpty(Slug))
+        {
+            comments = CommentService.GetComments(Slug);
+        }
+    }
+
+    private void OnCommentsUpdated()
+    {
+        LoadComments();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo("/blog");
+    }
+
+    public void Dispose()
+    {
+        CommentService.OnCommentsChanged -= OnCommentsUpdated;
+    }
+}

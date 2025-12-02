@@ -1,0 +1,21 @@
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/.DS_Store
+**/node_modules
+
+# Ignore specific markdown files (NOT all *.md - we need Posts/*.md for blog!)
+IMPROVEMENT_PLAN.md
+CLAUDE.md
+PORTFOLIO_README.md
+
+# Runtime data
+**/logs
+**/viewcounts.json
+**/comments.json
+
+# Build artifacts
+**/publish

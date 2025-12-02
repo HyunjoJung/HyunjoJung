@@ -1,0 +1,143 @@
+@page "/blog/tag/{Tag}"
+@using Portfolio.Services
+@using Portfolio.Models
+@inject BlogService BlogService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Tag: @Tag - Hyunjo Jung</PageTitle>
+
+<HeadContent>
+    <meta name="description" content="Posts tagged with @Tag" />
+    <meta name="keywords" content="@Tag, blog, technology" />
+    <meta property="og:title" content="Tag: @Tag" />
+    <meta property="og:description" content="Posts tagged with @Tag" />
+</HeadContent>
+
+<div class="terminal-container">
+    <div class="terminal-header">
+        <span class="terminal-title">hyunjo@@dev:~$ grep -r "@Tag" blog/</span>
+        <div class="terminal-controls">
+            <span class="control-btn close"></span>
+            <span class="control-btn minimize"></span>
+            <span class="control-btn maximize"></span>
+        </div>
+    </div>
+
+    <div class="terminal-body">
+        <div class="command-line">
+            <span class="prompt">hyunjo@@dev</span>
+            <span class="path">~/blog</span>
+            <span class="cursor">$</span>
+            <span class="command">grep -r "@Tag" .</span>
+        </div>
+
+        @if (isLoading)
+        {
+            <div class="loading">
+                <p class="loading-text">[Searching for posts tagged with @Tag...]</p>
+            </div>
+        }
+        else
+        {
+            <div class="tag-header">
+                <div class="tag-title-line">
+                    <span class="prompt">#</span>
+                    <h1 class="tag-title">Posts tagged with <span class="tag-name">@@@Tag</span></h1>
+                </div>
+                <div class="tag-stats">
+                    <span class="stat">@filteredPosts.Count posts found</span>
+                </div>
+            </div>
+
+            @if (!filteredPosts.Any())
+            {
+                <div class="no-posts">
+                    <pre>
+ERROR: No posts found with tag '@Tag'
+─────────────────────────────────────
+Try browsing all tags or return to the blog homepage.
+                    </pre>
+                    <div class="navigation-links">
+                        <a href="/blog" class="nav-link">← Back to Blog</a>
+                        <a href="/" class="nav-link">All Tags →</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <section class="posts-section">
+                    <div class="posts-list">
+                        @foreach (var post in filteredPosts)
+                        {
+                            <a href="/blog/@post.Slug" class="post-card">
+                                <div class="post-meta">
+                                    <span class="date">[@post.PublishedDate.ToString("yyyy-MM-dd")]</span>
+                                    <span class="read-time">~@post.ReadTimeMinutes min</span>
+                                    @if (!string.IsNullOrEmpty(post.Category))
+                                    {
+                                        <span class="category">[@post.Category]</span>
+                                    }
+                                </div>
+                                <h3 class="post-title">
+                                    <span class="prompt">></span> @post.Title
+                                </h3>
+                                <p class="post-description">@post.Description</p>
+                                <div class="post-tags">
+                                    @foreach (var tag in post.Tags)
+                                    {
+                                        <span class="tag @(tag == Tag ? "active" : "")">@@@tag</span>
+                                    }
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </section>
+
+                <div class="navigation-footer">
+                    <a href="/blog" class="back-link">← Back to All Posts</a>
+                </div>
+            }
+        }
+
+        <div class="command-line">
+            <span class="prompt">hyunjo@@dev</span>
+            <span class="path">~/blog</span>
+            <span class="cursor blink">$</span>
+            <span class="cursor-block">_</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Tag { get; set; } = string.Empty;
+
+    private List<BlogPost> filteredPosts = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPostsAsync();
+        isLoading = false;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!isLoading)
+        {
+            isLoading = true;
+            await LoadPostsAsync();
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadPostsAsync()
+    {
+        var allPosts = await BlogService.GetAllPostsAsync();
+        filteredPosts = allPosts
+            .Where(p => p.Tags.Contains(Tag, StringComparer.OrdinalIgnoreCase))
+            .OrderByDescending(p => p.PublishedDate)
+            .ToList();
+    }
+}

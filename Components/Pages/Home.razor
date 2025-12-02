@@ -1,0 +1,140 @@
+@page "/terminal"
+@using Portfolio.Components.Shared
+@rendermode InteractiveServer
+
+<PageTitle>Terminal - Hyunjo Jung</PageTitle>
+
+<HeadContent>
+    <meta name="description" content="Interactive terminal interface - Hyunjo Jung's Blog" />
+    <meta name="keywords" content="terminal, blog, interactive, hyunjo jung" />
+</HeadContent>
+
+<div class="terminal-page">
+    <Terminal InitialPath="/" Username="guest" />
+</div>
+
+<style>
+    .terminal-page {
+        width: 100%;
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .terminal-interactive {
+        background: #1e1e1e;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        font-family: 'Courier New', monospace;
+        min-height: 600px;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .terminal-interactive.focused {
+        box-shadow: 0 8px 32px rgba(0, 170, 255, 0.3);
+    }
+
+    .terminal-output {
+        padding: 1.5rem;
+        color: #e0e0e0;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .terminal-line {
+        margin-bottom: 1rem;
+    }
+
+    .command-line {
+        color: #e0e0e0;
+        margin-bottom: 0.25rem;
+    }
+
+    .prompt {
+        color: #50fa7b;
+        font-weight: bold;
+    }
+
+    .path {
+        color: #8be9fd;
+        margin: 0 0.5rem;
+    }
+
+    .cursor {
+        color: #f8f8f2;
+        margin: 0 0.5rem;
+    }
+
+    .command {
+        color: #f1fa8c;
+    }
+
+    .command-output {
+        color: #f8f8f2;
+        margin: 0.5rem 0 0 0;
+        padding: 0;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        background: transparent;
+    }
+
+    .terminal-input-line {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .terminal-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #f1fa8c;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        outline: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .terminal-input::placeholder {
+        color: #6272a4;
+    }
+
+    .cursor-block {
+        color: #50fa7b;
+        margin-left: 2px;
+        animation: none;
+    }
+
+    .cursor-block.blink {
+        animation: blink 1s step-end infinite;
+    }
+
+    @@keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+    }
+
+    /* Scrollbar styling */
+    .terminal-output::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .terminal-output::-webkit-scrollbar-track {
+        background: #282a36;
+    }
+
+    .terminal-output::-webkit-scrollbar-thumb {
+        background: #44475a;
+        border-radius: 4px;
+    }
+
+    .terminal-output::-webkit-scrollbar-thumb:hover {
+        background: #6272a4;
+    }
+</style>
+
+@code {
+
+}

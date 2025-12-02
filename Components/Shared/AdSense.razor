@@ -1,0 +1,43 @@
+@inject IJSRuntime JS
+
+<div class="terminal-ad-container">
+    <div class="ad-header">
+        <span class="ad-process-id">[PID:@(new Random().Next(1000, 9999))] ./run_ad_service.sh --slot @SlotId</span>
+        <span class="ad-badge">SPONSORED</span>
+    </div>
+    <div class="ad-content">
+        <!-- Google AdSense Code -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1012950383644941"
+             data-ad-slot="@SlotId"
+             data-ad-format="@Format"
+             data-full-width-responsive="true"></ins>
+    </div>
+    <div class="ad-footer">
+        <span class="ad-status">> Process finished successfully.</span>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string SlotId { get; set; } = "1234567890"; // Default placeholder
+
+    [Parameter]
+    public string Format { get; set; } = "auto";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("eval", "(adsbygoogle = window.adsbygoogle || []).push({});");
+            }
+            catch
+            {
+                // Ignore errors if adblocker is present or script not loaded
+            }
+        }
+    }
+}

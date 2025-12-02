@@ -1,0 +1,345 @@
+@using Portfolio.Services
+@using Portfolio.Models
+@inject TerminalCommandService CommandService
+@inject BlogService BlogService
+@inject BrowserStorageService StorageService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<div class="terminal-interactive @(IsFocused ? "focused" : "")" @onclick="FocusInput">
+    <div class="terminal-output">
+        @foreach (var entry in history)
+        {
+            <div class="terminal-line">
+                <div class="command-line">
+                    <span class="prompt">@Username@@dev</span>
+                    <span class="path">@GetDisplayPath(entry.Path)</span>
+                    <span class="cursor">$</span>
+                    <span class="command">@entry.Command</span>
+                </div>
+                @if (!string.IsNullOrEmpty(entry.Output))
+                {
+                    <pre class="command-output">@entry.Output</pre>
+                }
+            </div>
+        }
+
+        <div class="terminal-input-line">
+            <span class="prompt">@Username@@dev</span>
+            <span class="path">@GetDisplayPath(CurrentPath)</span>
+            <span class="cursor">$</span>
+            <input type="text"
+                   class="terminal-input"
+                   @bind="currentInput"
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyDown"
+                   @onkeydown:preventDefault="shouldPreventDefault"
+                   @ref="inputElement"
+                   placeholder="Type 'help' for available commands..."
+                   autocomplete="off"
+                   spellcheck="false" />
+            <span class="cursor-block @(IsFocused ? "blink" : "")">_</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string InitialPath { get; set; } = "/";
+
+    [Parameter]
+    public string Username { get; set; } = "guest";
+
+    private List<HistoryEntry> history = new();
+    private string currentInput = string.Empty;
+    private string CurrentPath = "/";
+    private ElementReference inputElement;
+    private bool IsFocused = false;
+    private List<string> commandHistory = new();
+    private int historyIndex = -1;
+    private bool shouldPreventDefault = false;
+
+    // Cache for auto-completion
+    private List<string> blogPostSlugs = new();
+    private List<string> availableCommands = new() 
+    { 
+        "help", "clear", "cls", "ls", "cd", "pwd", "cat", "whoami", 
+        "login", "logout", "grep", "comment", "issue", "star", "discuss", "exit" 
+    };
+
+    private class HistoryEntry
+    {
+        public string Command { get; set; } = string.Empty;
+        public string Output { get; set; } = string.Empty;
+        public string Path { get; set; } = "/";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CurrentPath = InitialPath;
+            await LoadHistoryAsync();
+            await LoadAutocompleteDataAsync();
+            
+            // Only show welcome if history is empty (first visit)
+            if (!history.Any())
+            {
+                await ShowWelcomeMessage();
+            }
+            
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadHistoryAsync()
+    {
+        try
+        {
+            var savedHistory = await StorageService.GetItemAsync("terminal_history");
+            if (!string.IsNullOrEmpty(savedHistory))
+            {
+                commandHistory = System.Text.Json.JsonSerializer.Deserialize<List<string>>(savedHistory) ?? new();
+            }
+        }
+        catch
+        {
+            // Ignore storage errors
+        }
+    }
+
+    private async Task SaveHistoryAsync()
+    {
+        try
+        {
+            // Limit history to 50 items
+            if (commandHistory.Count > 50)
+            {
+                commandHistory = commandHistory.Take(50).ToList();
+            }
+            
+            var json = System.Text.Json.JsonSerializer.Serialize(commandHistory);
+            await StorageService.SetItemAsync("terminal_history", json);
+        }
+        catch
+        {
+            // Ignore storage errors
+        }
+    }
+
+    private async Task LoadAutocompleteDataAsync()
+    {
+        var posts = await BlogService.GetAllPostsAsync();
+        blogPostSlugs = posts.Select(p => p.Slug).ToList();
+    }
+
+    private async Task ShowWelcomeMessage()
+    {
+        var welcome = @"
+██╗  ██╗██╗   ██╗██╗   ██╗███╗   ██╗     ██╗ ██████╗
+██║  ██║╚██╗ ██╔╝██║   ██║████╗  ██║     ██║██╔═══██╗
+███████║ ╚████╔╝ ██║   ██║██╔██╗ ██║     ██║██║   ██║
+██╔══██║  ╚██╔╝  ██║   ██║██║╚██╗██║██   ██║██║   ██║
+██║  ██║   ██║   ╚██████╔╝██║ ╚████║╚█████╔╝╚██████╔╝
+╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝ ╚════╝  ╚═════╝
+
+Welcome to Hyunjo Jung's Interactive Terminal Blog
+Type 'help' to see available commands
+";
+        history.Add(new HistoryEntry { Command = "", Output = welcome, Path = CurrentPath });
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        shouldPreventDefault = false;
+
+        if (e.Key == "Enter")
+        {
+            await ExecuteCommand();
+        }
+        else if (e.Key == "ArrowUp")
+        {
+            NavigateHistory(1); // 1 goes back in time (older commands)
+            shouldPreventDefault = true;
+        }
+        else if (e.Key == "ArrowDown")
+        {
+            NavigateHistory(-1); // -1 goes forward (newer commands)
+            shouldPreventDefault = true;
+        }
+        else if (e.Key == "Tab")
+        {
+            await HandleTabCompletion();
+            shouldPreventDefault = true;
+        }
+    }
+
+    private async Task HandleTabCompletion()
+    {
+        if (string.IsNullOrWhiteSpace(currentInput)) return;
+
+        var parts = currentInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return;
+
+        var lastPart = parts.Last();
+        var prefix = currentInput.Substring(0, currentInput.LastIndexOf(lastPart));
+        
+        List<string> candidates = new();
+
+        // Scenario 1: Command completion (first word)
+        if (parts.Length == 1 && !currentInput.EndsWith(" "))
+        {
+            candidates = availableCommands
+                .Where(c => c.StartsWith(lastPart, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        // Scenario 2: File/Directory completion (argument)
+        else
+        {
+            // Add standard directories
+            if (CurrentPath == "/")
+            {
+                candidates.AddRange(new[] { "blog", "about" }.Where(d => d.StartsWith(lastPart, StringComparison.OrdinalIgnoreCase)));
+            }
+            
+            // Add blog posts if in blog directory or command is cat/cd
+            if (CurrentPath.StartsWith("/blog") || parts[0] == "cat" || (parts[0] == "cd" && lastPart.StartsWith("b")))
+            {
+                candidates.AddRange(blogPostSlugs.Where(s => s.StartsWith(lastPart, StringComparison.OrdinalIgnoreCase)));
+            }
+        }
+
+        if (candidates.Count == 1)
+        {
+            // Exact match - complete it
+            currentInput = prefix + candidates[0];
+            
+            // Add extension for posts if using 'cat'
+            if (parts[0] == "cat" && blogPostSlugs.Contains(candidates[0]))
+            {
+                currentInput += ".md";
+            }
+        }
+        else if (candidates.Count > 1)
+        {
+            // Multiple matches - show suggestions (optional: or common prefix)
+            // For now, we'll just pick the first one to keep it simple, 
+            // or we could output candidates to terminal history if we wanted to be fancy.
+            
+            // Let's implement common prefix logic
+            var commonPrefix = GetCommonPrefix(candidates);
+            if (commonPrefix.Length > lastPart.Length)
+            {
+                currentInput = prefix + commonPrefix;
+            }
+        }
+    }
+    
+    private string GetCommonPrefix(List<string> strings)
+    {
+        if (strings.Count == 0) return "";
+        if (strings.Count == 1) return strings[0];
+        
+        var prefix = strings[0];
+        for (int i = 1; i < strings.Count; i++)
+        {
+            while (!strings[i].StartsWith(prefix))
+            {
+                prefix = prefix.Substring(0, prefix.Length - 1);
+                if (string.IsNullOrEmpty(prefix)) return "";
+            }
+        }
+        return prefix;
+    }
+
+    private async Task ExecuteCommand()
+    {
+        if (string.IsNullOrWhiteSpace(currentInput))
+        {
+            history.Add(new HistoryEntry { Command = "", Output = "", Path = CurrentPath });
+            currentInput = string.Empty;
+            return;
+        }
+
+        var command = currentInput.Trim();
+        
+        // Add to history only if it's different from the last command
+        if (commandHistory.Count == 0 || commandHistory[0] != command)
+        {
+            commandHistory.Insert(0, command);
+            await SaveHistoryAsync();
+        }
+        
+        historyIndex = -1;
+
+        var result = await CommandService.ExecuteCommandAsync(command, CurrentPath);
+
+        if (result.ClearScreen)
+        {
+            history.Clear();
+        }
+        else
+        {
+            history.Add(new HistoryEntry
+                {
+                    Command = command,
+                    Output = result.Output,
+                    Path = CurrentPath
+                });
+        }
+
+        if (!string.IsNullOrEmpty(result.NavigateTo))
+        {
+            CurrentPath = result.NavigateTo;
+            if (Navigation.Uri != Navigation.BaseUri.TrimEnd('/') + result.NavigateTo)
+            {
+                Navigation.NavigateTo(result.NavigateTo);
+            }
+        }
+
+        currentInput = string.Empty;
+        StateHasChanged();
+
+        // Scroll to bottom (simple implementation)
+        await Task.Delay(50);
+        // TODO: Add JS interop for proper scrolling if needed
+    }
+
+    private void NavigateHistory(int direction)
+    {
+        if (commandHistory.Count == 0) return;
+
+        historyIndex += direction;
+        
+        // Clamp index
+        if (historyIndex < -1) historyIndex = -1;
+        if (historyIndex >= commandHistory.Count) historyIndex = commandHistory.Count - 1;
+
+        if (historyIndex == -1)
+        {
+            currentInput = string.Empty;
+        }
+        else
+        {
+            currentInput = commandHistory[historyIndex];
+        }
+    }
+
+    private void FocusInput()
+    {
+        IsFocused = true;
+        // Trigger focus on input element via JS if needed
+    }
+
+    private string GetDisplayPath(string path)
+    {
+        return path switch
+        {
+            "/" => "~",
+            "/blog" => "~/blog",
+            "/about" => "~/about",
+            _ when path.StartsWith("/blog/") => $"~/blog/{path.Split('/').Last()}",
+            _ => path
+        };
+    }
+}

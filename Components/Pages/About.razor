@@ -1,0 +1,314 @@
+@page "/about"
+
+<PageTitle>About - Hyunjo Jung</PageTitle>
+
+<div class="terminal-container">
+    <div class="terminal-header">
+        <span class="terminal-title">hyunjo@@dev:~$ cat about.md</span>
+        <div class="terminal-controls">
+            <span class="control-btn close"></span>
+            <span class="control-btn minimize"></span>
+            <span class="control-btn maximize"></span>
+        </div>
+    </div>
+
+    <div class="terminal-body">
+        <div class="command-line">
+            <span class="prompt">hyunjo@@dev</span>
+            <span class="path">~</span>
+            <span class="cursor">$</span>
+            <span class="command">cat about.md</span>
+        </div>
+
+        <section class="about-header">
+            <pre class="ascii-art">
+ _   _                        _
+| | | |_   _ _   _ _ __      (_) ___
+| |_| | | | | | | | '_ \  _  | |/ _ \
+|  _  | |_| | |_| | | | || |_| | (_) |
+|_| |_|\__, |\__,_|_| |_(_)__/ |\___/
+       |___/                |__/
+            </pre>
+            <div class="about-meta">
+                <span class="meta-item"><span class="meta-label">role:</span> <span class="meta-value">Fullstack Developer</span></span>
+                <span class="meta-item"><span class="meta-label">focus:</span> <span class="meta-value">AI Integration | Cloud Services</span></span>
+                <span class="meta-item"><span class="meta-label">github:</span> <a href="https://github.com/HyunjoJung" target="_blank" class="meta-link">@@HyunjoJung</a></span>
+            </div>
+        </section>
+
+        <section class="about-intro">
+            <div class="section-header">
+                <span class="prompt">#</span> whoami
+            </div>
+            <p class="about-description">Fullstack developer with expertise in AI integration and cloud-based services. Currently working at a PR agency, focusing on automation systems and data-driven solutions.</p>
+            <div class="about-list">
+                <div class="list-item">
+                    <span class="list-bullet">></span> Samsung Software Academy For Youth (SSAFY) 11th - Graduated with honors
+                </div>
+                <div class="list-item">
+                    <span class="list-bullet">></span> Interests: Fullstack Development, AI Integration, Cloud Services
+                </div>
+                <div class="list-item">
+                    <span class="list-bullet">></span> Certified Big Data Analyst (2023)
+                </div>
+            </div>
+        </section>
+
+    <section class="projects-section">
+        <div class="section-header">
+            <span class="prompt">#</span> Personal Projects
+        </div>
+        <p class="section-subtitle">Production-ready applications built with modern tech stacks</p>
+
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-title-line">
+                    <span class="prompt">></span>
+                    <a href="https://sheetlink.hyunjo.uk" target="_blank" class="project-title">SheetLink</a>
+                    <span class="project-status-badge">LIVE</span>
+                </div>
+                <p class="project-description">
+                    Free online tool to extract hyperlinks from Excel files and merge Title + URL columns into clickable links.
+                </p>
+                <div class="project-highlights">
+                    <div class="highlight-item"><span class="bullet">•</span> No server storage - all processing in-memory (privacy-focused)</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Supports .xlsx/.xls formats with DocumentFormat.OpenXml</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Built-in health checks and Prometheus metrics</div>
+                    <div class="highlight-item"><span class="bullet">•</span> CI/CD with GitHub Actions → Docker Hub → Self-hosted Ubuntu</div>
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-badge">ASP.NET Core 10</span>
+                    <span class="tech-badge">Blazor Server</span>
+                    <span class="tech-badge">Docker</span>
+                    <span class="tech-badge">OpenXML</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://sheetlink.hyunjo.uk" target="_blank" class="project-link">Live Demo →</a>
+                    <a href="https://github.com/HyunjoJung/ExcelLinkExtractor" target="_blank" class="project-link">Source →</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-title-line">
+                    <span class="prompt">></span>
+                    <a href="https://cardmaker.hyunjo.uk" target="_blank" class="project-title">CardMaker</a>
+                    <span class="project-status-badge">LIVE</span>
+                </div>
+                <p class="project-description">
+                    Stateless business card generator that transforms Excel employee data into PowerPoint cards with QR codes for vCards.
+                </p>
+                <div class="project-highlights">
+                    <div class="highlight-item"><span class="bullet">•</span> Database-free design - no persistent storage</div>
+                    <div class="highlight-item"><span class="bullet">•</span> QR code generation with vCard data embedding</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Formatting preservation via OpenXML SDK</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Security-first: CSP headers, rate limiting, health checks</div>
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-badge">ASP.NET Core 10</span>
+                    <span class="tech-badge">Blazor Server</span>
+                    <span class="tech-badge">OpenXML</span>
+                    <span class="tech-badge">QRCoder</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://cardmaker.hyunjo.uk" target="_blank" class="project-link">Live Demo →</a>
+                    <a href="https://github.com/HyunjoJung/Business-Card-Automation-System" target="_blank" class="project-link">Source →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="work-section">
+        <div class="section-header">
+            <span class="prompt">#</span> Professional Experience
+        </div>
+        <p class="section-subtitle">Enterprise-scale projects at a PR agency</p>
+
+        <div class="work-grid">
+            <div class="work-card">
+                <div class="work-title-line">
+                    <span class="prompt">></span>
+                    <span class="work-title">Community & Newsroom Monitoring Platform</span>
+                </div>
+                <div class="work-client">client: <span class="client-name">Global Electronics Company</span></div>
+                <p class="work-description">
+                    Automated monitoring system for 12 Korean communities and 59 global newsrooms.
+                    AI-powered classification (GPT + keyword analysis) categorizes posts by product lines (TV/AV/EB).
+                </p>
+                <div class="work-features">
+                    <div class="highlight-item"><span class="bullet">•</span> Real-time crawling with Playwright/Puppeteer browser automation</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Weekly Excel reports with automatic categorization</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Desktop app (Electron + NestJS + React)</div>
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-badge">NestJS</span>
+                    <span class="tech-badge">TypeScript</span>
+                    <span class="tech-badge">Electron</span>
+                    <span class="tech-badge">Playwright</span>
+                    <span class="tech-badge">OpenAI GPT</span>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-title-line">
+                    <span class="prompt">></span>
+                    <span class="work-title">News Collection Automation System</span>
+                </div>
+                <div class="work-client">client: <span class="client-name">Global Game Publisher</span></div>
+                <p class="work-description">
+                    Serverless news aggregation system collecting 300+ daily articles from Naver API, Google RSS, and 240+ game/IT news sites.
+                </p>
+                <div class="work-features">
+                    <div class="highlight-item"><span class="bullet">•</span> AWS Step Functions orchestrating 8 Lambda functions</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Parallel crawling (Map State: 40 concurrent sites)</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Automated daily email reports with statistics dashboard</div>
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-badge">AWS Lambda</span>
+                    <span class="tech-badge">Step Functions</span>
+                    <span class="tech-badge">DynamoDB</span>
+                    <span class="tech-badge">Node.js</span>
+                    <span class="tech-badge">Terraform</span>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-title-line">
+                    <span class="prompt">></span>
+                    <span class="work-title">News Parsing SaaS API</span>
+                </div>
+                <div class="work-client">client: <span class="client-name">Internal PR Tool</span></div>
+                <p class="work-description">
+                    Serverless API service for parsing 698 Korean news sites and community platforms.
+                    3-tier Lambda architecture (Router → CSR/SSR) optimized for cost efficiency.
+                </p>
+                <div class="work-features">
+                    <div class="highlight-item"><span class="bullet">•</span> Auto-detection of CSR (21 sites) vs SSR (677 sites)</div>
+                    <div class="highlight-item"><span class="bullet">•</span> 87% cost reduction (SSR: 512MB, CSR: 2GB separation)</div>
+                    <div class="highlight-item"><span class="bullet">•</span> Admin dashboard for 698 domain management</div>
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-badge">AWS Lambda</span>
+                    <span class="tech-badge">API Gateway</span>
+                    <span class="tech-badge">DynamoDB</span>
+                    <span class="tech-badge">Puppeteer</span>
+                    <span class="tech-badge">Terraform</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="skills-section">
+        <div class="section-header">
+            <span class="prompt">#</span> Tech Stack
+        </div>
+
+        <div class="skills-grid">
+            <div class="skill-category">
+                <div class="category-title"><span class="prompt">></span> Backend / AI</div>
+                <div class="tech-stack">
+                    <span class="tech-badge">Python</span>
+                    <span class="tech-badge">C#</span>
+                    <span class="tech-badge">.NET</span>
+                    <span class="tech-badge">Django</span>
+                    <span class="tech-badge">Flask</span>
+                    <span class="tech-badge">NestJS</span>
+                    <span class="tech-badge">AWS</span>
+                    <span class="tech-badge">OpenAI</span>
+                    <span class="tech-badge">PostgreSQL</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="category-title"><span class="prompt">></span> Frontend</div>
+                <div class="tech-stack">
+                    <span class="tech-badge">React</span>
+                    <span class="tech-badge">Vue.js</span>
+                    <span class="tech-badge">TypeScript</span>
+                    <span class="tech-badge">Blazor</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="category-title"><span class="prompt">></span> DevOps & Tools</div>
+                <div class="tech-stack">
+                    <span class="tech-badge">Docker</span>
+                    <span class="tech-badge">Terraform</span>
+                    <span class="tech-badge">GitHub Actions</span>
+                    <span class="tech-badge">Cloudflare</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="awards-section">
+        <div class="section-header">
+            <span class="prompt">#</span> Awards & Certifications
+        </div>
+
+        <div class="awards-grid">
+            <div class="award-card">
+                <div class="award-year">2024.12</div>
+                <div class="award-content">
+                    <h4>Outstanding Graduate Award</h4>
+                    <p>Samsung Software Academy For Youth (SSAFY) 11th</p>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <div class="award-year">2024.11</div>
+                <div class="award-content">
+                    <h4>Excellence Award - Logistics Automation</h4>
+                    <p>Samsung SDS Partnership Project</p>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <div class="award-year">2024.10</div>
+                <div class="award-content">
+                    <h4>Excellence Award - AI Auto Labeler</h4>
+                    <p>Samsung Electronics VD Partnership</p>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <div class="award-year">2024.05</div>
+                <div class="award-content">
+                    <h4>Grand Prize - FINFO Platform</h4>
+                    <p>Financial Comparison Service</p>
+                </div>
+            </div>
+
+            <div class="award-card">
+                <div class="award-year">2023.12</div>
+                <div class="award-content">
+                    <h4>Big Data Analyst Certification</h4>
+                    <p>Korea Data Agency</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="research-section">
+        <div class="section-header">
+            <span class="prompt">#</span> Research Publications
+        </div>
+        <div class="research-list">
+            <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11784072" target="_blank" class="research-item">
+                <div class="research-title"><span class="prompt">></span> CNN-based Apartment Price Prediction</div>
+                <div class="research-venue">Korea Society of Computer Information</div>
+            </a>
+            <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11189989" target="_blank" class="research-item">
+                <div class="research-title"><span class="prompt">></span> Music Investment Prediction using LSTM</div>
+                <div class="research-venue">Korea Information Processing Society</div>
+            </a>
+        </div>
+    </section>
+
+    <div class="command-line">
+        <span class="prompt">hyunjo@@dev</span>
+        <span class="path">~</span>
+        <span class="cursor blink">$</span>
+        <span class="cursor-block">_</span>
+    </div>
+    </div>
+</div>
