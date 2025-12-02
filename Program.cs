@@ -84,12 +84,15 @@ app.Use(async (context, next) =>
     // Content Security Policy (Blazor Server compatible)
     context.Response.Headers.Append("Content-Security-Policy",
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://pagead2.googlesyndication.com; " +
-        "style-src 'self' 'unsafe-inline' blob: https://cdn.jsdelivr.net; " +
-        "img-src 'self' data: https:; " +
-        "font-src 'self' https://cdn.jsdelivr.net; " +
-        "connect-src 'self' ws: wss:; " +
-        "frame-ancestors 'none';");
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://pagead2.googlesyndication.com https://googletagservices.com https://static.cloudflareinsights.com https://*.google.com https://*.google https://*.gstatic.com; " + // Blazor requires unsafe-eval, allow AdSense and Cloudflare
+        "style-src 'self' 'unsafe-inline' blob: https://cdn.jsdelivr.net https://fonts.googleapis.com; " + // Allow Google Fonts
+        "img-src 'self' data: https://pagead2.googlesyndication.com https://*.google.com https://*.google https://*.gstatic.com https://*.doubleclick.net; " + // Allow AdSense images
+        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " + // Allow Google Fonts
+        "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.google.com https://*.google; " + // Allow AdSense iframes
+        "connect-src 'self' ws: wss: https://pagead2.googlesyndication.com https://cloudflareinsights.com https://*.google.com https://*.google https://*.doubleclick.net; " + // WebSocket for Blazor SignalR, AdSense and Cloudflare connections
+        "frame-ancestors 'none'; " +
+        "base-uri 'self'; " +
+        "form-action 'self'");
 
     await next();
 });
