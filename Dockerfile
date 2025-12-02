@@ -18,4 +18,5 @@ WORKDIR /app
 EXPOSE 5051
 ENV ASPNETCORE_URLS=http://+:5051
 COPY --from=build /app/publish .
+COPY --from=build /src/Posts ./Posts
 ENTRYPOINT ["dotnet", "Portfolio.dll"]
