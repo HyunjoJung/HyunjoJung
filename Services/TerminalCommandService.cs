@@ -353,12 +353,24 @@ drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
             };
         }
 
+        // Get the current host from HttpContext
+        var request = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = request != null
+            ? $"{request.Scheme}://{request.Host}"
+            : "http://localhost:5050";
+
         return new CommandResult
         {
             Success = true,
-            Output = "Redirecting to GitHub authentication...",
-            NavigateTo = "/login",
-            ForceLoad = true  // Force full page reload for server-side redirect
+            Output = $@"GitHub OAuth Login Required
+─────────────────────────────────────────────────────────
+To authenticate, please visit:
+
+  {baseUrl}/login
+
+This will redirect you to GitHub for authentication.
+After authorizing, you'll be redirected back here.
+─────────────────────────────────────────────────────────"
         };
     }
 
@@ -373,12 +385,27 @@ drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
             };
         }
 
+        // Get the current host from HttpContext
+        var request = _httpContextAccessor.HttpContext?.Request;
+        var baseUrl = request != null
+            ? $"{request.Scheme}://{request.Host}"
+            : "http://localhost:5050";
+
+        var username = User.FindFirst(ClaimTypes.Name)?.Value ?? User.Identity.Name;
+
         return new CommandResult
         {
             Success = true,
-            Output = "Logging out...",
-            NavigateTo = "/logout",
-            ForceLoad = true  // Force full page reload for server-side redirect
+            Output = $@"Logout
+─────────────────────────────────────────────────────────
+Currently logged in as: {username}@github
+
+To logout, please visit:
+
+  {baseUrl}/logout
+
+You will be logged out and redirected to the homepage.
+─────────────────────────────────────────────────────────"
         };
     }
 

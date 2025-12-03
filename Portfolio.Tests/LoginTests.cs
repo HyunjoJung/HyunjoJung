@@ -17,7 +17,7 @@ public class LoginTests : PageTest
     }
 
     [Test]
-    public async Task Terminal_Login_Command_Should_Redirect_To_GitHub()
+    public async Task Terminal_Login_Command_Should_Show_URL()
     {
         // Navigate to homepage
         await Page.GotoAsync(_baseUrl);
@@ -32,18 +32,24 @@ public class LoginTests : PageTest
         await terminalInput.FillAsync("login github");
         await terminalInput.PressAsync("Enter");
 
-        // Wait a bit for the command to process
-        await Page.WaitForTimeoutAsync(2000);
+        // Wait for command output
+        await Page.WaitForTimeoutAsync(1000);
 
-        // Check if we're redirected to GitHub or /login endpoint
-        var currentUrl = Page.Url;
-        Console.WriteLine($"Current URL after login command: {currentUrl}");
+        // Check for login URL in command output
+        var output = Page.Locator(".command-output");
+        if (await output.IsVisibleAsync())
+        {
+            var outputText = await output.TextContentAsync();
+            Console.WriteLine($"Login output: {outputText}");
 
-        // Should either be at /login or already redirected to GitHub
-        Assert.That(
-            currentUrl.Contains("/login") || currentUrl.Contains("github.com"),
-            $"Expected redirect to login or GitHub, but got: {currentUrl}"
-        );
+            // Should show login URL
+            Assert.That(outputText, Does.Contain("/login"));
+            Assert.That(outputText, Does.Contain("GitHub OAuth") | Does.Contain("authenticate"));
+        }
+        else
+        {
+            Assert.Fail("No command output displayed after login command");
+        }
     }
 
     [Test]

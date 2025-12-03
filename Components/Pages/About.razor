@@ -2,7 +2,6 @@
 @using Portfolio.Services
 @inject TerminalCommandService CommandService
 @inject NavigationManager Navigation
-@inject IJSRuntime JS
 @rendermode InteractiveServer
 
 <PageTitle>About - Hyunjo Jung</PageTitle>
@@ -351,15 +350,7 @@
 
             if (!string.IsNullOrEmpty(result.NavigateTo))
             {
-                if (result.ForceLoad)
-                {
-                    // Use JavaScript for full page reload (required for OAuth redirects)
-                    await JS.InvokeVoidAsync("eval", $"window.location.href = '{result.NavigateTo}'");
-                }
-                else
-                {
-                    Navigation.NavigateTo(result.NavigateTo);
-                }
+                Navigation.NavigateTo(result.NavigateTo);
             }
             else if (!string.IsNullOrEmpty(result.Output))
             {
