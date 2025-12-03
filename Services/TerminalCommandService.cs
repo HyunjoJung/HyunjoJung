@@ -146,10 +146,25 @@ Examples:
 
     private async Task<CommandResult> ListDirectory(string currentPath, string[] args)
     {
-        var targetPath = args.Length > 0 ? args[0] : currentPath;
+        // Check for -al flag
+        bool showAll = args.Any(a => a == "-al" || a == "-a" || a == "-l");
+        var targetPath = args.FirstOrDefault(a => !a.StartsWith("-")) ?? currentPath;
 
         if (targetPath == "/" || targetPath == "~")
         {
+            if (showAll)
+            {
+                return new CommandResult
+                {
+                    Success = true,
+                    Output = @"total 12
+drwxr-xr-x  3 hyunjo dev 4096 Dec  3 09:00 .
+drwxr-xr-x 18 root   root 4096 Dec  2 10:00 ..
+drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
+-rw-r--r--  1 hyunjo dev 1234 Dec  2 10:30 about.md
+-rw-r--r--  1 hyunjo dev  567 Dec  2 10:30 README.md"
+                };
+            }
             return new CommandResult
             {
                 Success = true,
@@ -164,7 +179,17 @@ drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
         {
             var posts = await _blogService.GetAllPostsAsync();
             var output = new StringBuilder();
-            output.AppendLine($"total {posts.Count}");
+
+            if (showAll)
+            {
+                output.AppendLine($"total {posts.Count + 2}");
+                output.AppendLine("drwxr-xr-x  2 hyunjo dev 4096 Dec  3 09:00 .");
+                output.AppendLine("drwxr-xr-x  3 hyunjo dev 4096 Dec  2 10:00 ..");
+            }
+            else
+            {
+                output.AppendLine($"total {posts.Count}");
+            }
 
             foreach (var post in posts.Take(20))
             {

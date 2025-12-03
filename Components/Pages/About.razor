@@ -1,4 +1,7 @@
 @page "/about"
+@using Portfolio.Services
+@inject TerminalCommandService CommandService
+@inject NavigationManager Navigation
 
 <PageTitle>About - Hyunjo Jung</PageTitle>
 
@@ -304,11 +307,106 @@
         </div>
     </section>
 
-    <div class="command-line">
-        <span class="prompt">hyunjo@@dev</span>
-        <span class="path">~</span>
-        <span class="cursor blink">$</span>
-        <span class="cursor-block">_</span>
+    <div class="terminal-input-section">
+        <div class="command-line">
+            <span class="prompt">hyunjo@@dev</span>
+            <span class="path">~/about</span>
+            <span class="cursor">$</span>
+            <input type="text"
+                   class="terminal-input"
+                   @bind="terminalInput"
+                   @bind:event="oninput"
+                   @onkeydown="HandleTerminalKeyDown"
+                   @ref="terminalInputElement"
+                   placeholder='Type "help" for available commands...'
+                   autocomplete="off"
+                   spellcheck="false" />
+        </div>
     </div>
+
+    @if (!string.IsNullOrEmpty(commandOutput))
+    {
+        <div class="command-output">
+            <pre>@commandOutput</pre>
+        </div>
+    }
     </div>
 </div>
+
+@code {
+    private string terminalInput = string.Empty;
+    private ElementReference terminalInputElement;
+    private string commandOutput = string.Empty;
+
+    private async Task HandleTerminalKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(terminalInput))
+        {
+            var command = terminalInput.Trim();
+            terminalInput = string.Empty;
+
+            var result = await CommandService.ExecuteCommandAsync(command, "/about");
+
+            if (!string.IsNullOrEmpty(result.NavigateTo))
+            {
+                Navigation.NavigateTo(result.NavigateTo);
+            }
+            else if (!string.IsNullOrEmpty(result.Output))
+            {
+                commandOutput = result.Output;
+            }
+        }
+    }
+}
+
+<style>
+    .terminal-input-section {
+        margin-top: 2rem;
+        background: transparent;
+    }
+
+    .terminal-input-section .command-line {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+    }
+
+    .terminal-input {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #44475a;
+        color: #f1fa8c;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        outline: none;
+        padding: 4px 8px;
+        margin: 0;
+        width: 70%;
+        transition: border-color 0.3s;
+    }
+
+    .terminal-input:focus {
+        border-bottom-color: #bd93f9;
+    }
+
+    .terminal-input::placeholder {
+        color: #6272a4;
+    }
+
+    .command-output {
+        background: transparent;
+        border-left: 2px solid #6272a4;
+        padding: 0.5rem 0 0.5rem 1rem;
+        margin: 0.5rem 0 1rem 0;
+        color: #8be9fd;
+    }
+
+    .command-output pre {
+        margin: 0;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
