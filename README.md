@@ -16,21 +16,6 @@
 
 ---
 
-## 🚀 About This Portfolio
-
-This repository hosts my personal portfolio website, featuring a unique **Interactive Terminal**.
-Built with **.NET 10.0** and **Blazor Server**, it combines a traditional web UI with a CLI experience.
-
-### Key Features
-*   **Interactive Terminal:** Navigate the site using commands like `ls`, `cd`, `cat`, and `grep`.
-*   **File-Based Blog:** Markdown parsing with YAML front matter, supporting hot-reloading in development.
-*   **GitHub Integration:** OAuth login, commenting system, and repo interactions (star, issue tracking).
-*   **Tech Stack:** C#, Blazor Server, Markdig, Serilog, Docker.
-
-> **Try it out:** Open the terminal on the site and type `help` to get started!
-
----
-
 ## 🧠 Tech Stack
 
 ### 📌 Backend / AI
@@ -50,6 +35,24 @@ Built with **.NET 10.0** and **Blazor Server**, it combines a traditional web UI
 ![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+
+---
+
+## 🛠️ Recent Projects
+
+### 🔗 SheetLink
+Free online tool to extract hyperlinks from Excel files and merge Title + URL columns into clickable links.
+*   **Live Demo:** [https://sheetlink.hyunjo.uk](https://sheetlink.hyunjo.uk)
+*   **Source Code:** [https://github.com/HyunjoJung/ExcelLinkExtractor](https://github.com/HyunjoJung/ExcelLinkExtractor)
+*   **Key Features:** No server storage (privacy-focused), Supports .xlsx/.xls, Built-in health checks, CI/CD with GitHub Actions.
+*   **Tech Stack:** ASP.NET Core 10, Blazor Server, Docker, OpenXML
+
+### 🔗 CardMaker
+Stateless business card generator that transforms Excel employee data into PowerPoint cards with QR codes for vCards.
+*   **Live Demo:** [https://cardmaker.hyunjo.uk](https://cardmaker.hyunjo.uk)
+*   **Source Code:** [https://github.com/HyunjoJung/Business-Card-Automation-System](https://github.com/HyunjoJung/Business-Card-Automation-System)
+*   **Key Features:** Database-free design, QR code generation, Formatting preservation, Security-first (CSP headers, rate limiting).
+*   **Tech Stack:** ASP.NET Core 10, Blazor Server, OpenXML, QRCoder
 
 ---
 
