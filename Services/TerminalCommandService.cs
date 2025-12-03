@@ -357,7 +357,8 @@ drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
         {
             Success = true,
             Output = "Redirecting to GitHub authentication...",
-            NavigateTo = "/login"
+            NavigateTo = "/login",
+            ForceLoad = true  // Force full page reload for server-side redirect
         };
     }
 
@@ -376,7 +377,8 @@ drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
         {
             Success = true,
             Output = "Logging out...",
-            NavigateTo = "/logout"
+            NavigateTo = "/logout",
+            ForceLoad = true  // Force full page reload for server-side redirect
         };
     }
 

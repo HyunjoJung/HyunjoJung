@@ -2,6 +2,7 @@
 @using Portfolio.Services
 @inject TerminalCommandService CommandService
 @inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <PageTitle>About - Hyunjo Jung</PageTitle>
 
@@ -349,7 +350,7 @@
 
             if (!string.IsNullOrEmpty(result.NavigateTo))
             {
-                Navigation.NavigateTo(result.NavigateTo);
+                Navigation.NavigateTo(result.NavigateTo, result.ForceLoad);
             }
             else if (!string.IsNullOrEmpty(result.Output))
             {

@@ -406,7 +406,7 @@ The requested post '@Slug' does not exist.
 
             if (!string.IsNullOrEmpty(result.NavigateTo))
             {
-                Navigation.NavigateTo(result.NavigateTo);
+                Navigation.NavigateTo(result.NavigateTo, result.ForceLoad);
             }
             else if (!string.IsNullOrEmpty(result.Output))
             {

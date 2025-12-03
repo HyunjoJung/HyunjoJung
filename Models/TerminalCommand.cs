@@ -6,6 +6,7 @@ public class CommandResult
     public string Output { get; set; } = string.Empty;
     public string? NavigateTo { get; set; }
     public bool ClearScreen { get; set; }
+    public bool ForceLoad { get; set; }  // Force full page reload instead of SPA navigation
 }
 
 public class CommandHistoryEntry

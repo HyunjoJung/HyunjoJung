@@ -8,58 +8,122 @@ namespace Portfolio.Tests;
 [TestFixture]
 public class CommentTests : PageTest
 {
-    private string _baseUrl = "http://localhost:5050"; 
+    private string _baseUrl = "http://localhost:5050"; // dotnet run port
 
     [SetUp]
     public void Setup()
     {
-        // Assuming the app is running locally on port 5050 (or whatever port you configure)
-        // In a real CI/CD pipeline, you'd start the app process here.
-        // For this manual debugging session, ensure the app is running via `dotnet run` in another terminal.
+        // App should be running on port 5050 via dotnet run
     }
 
     [Test]
-    public async Task Comment_Submission_Should_Work_Or_Log_Error()
+    public async Task Comment_Without_Login_Should_Show_Auth_Required_Message()
     {
-        // 1. Navigate to a blog post (e.g., the first one found or a specific test post)
+        // Navigate to a blog post
         await Page.GotoAsync($"{_baseUrl}/blog/building-sheetlink-excel-processor");
+        await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-        // 2. Wait for page to load
+        // Wait for page to load
         await Expect(Page).ToHaveTitleAsync(new System.Text.RegularExpressions.Regex("Building SheetLink"));
 
-        // 3. Check if we need to login (Mocking or handling auth is tricky without UI interaction or tokens)
-        // Since GitHub auth requires 3rd party interaction, for this specific "Circuit Terminated" debugging,
-        // we assume we are testing the *unauthenticated* flow first OR the error happens *before* auth redirection if logic is broken.
-        // However, the user said "When trying to comment". This implies they might be logged in or clicking the button triggers it.
-        
-        // Let's try to find the comment box.
-        // If the user is NOT logged in, they should see a "Login with GitHub" button instead of a text area.
-        
-        var loginButton = Page.GetByRole(AriaRole.Link, new() { Name = "Login with GitHub to comment" });
-        
-        if (await loginButton.IsVisibleAsync())
+        // Find the terminal input
+        var terminalInput = Page.Locator("input.terminal-input").First;
+        await Expect(terminalInput).ToBeVisibleAsync();
+
+        // Try to post a comment without being logged in
+        await terminalInput.FillAsync("comment \"This is a test comment\"");
+        await terminalInput.PressAsync("Enter");
+
+        // Wait for command output
+        await Page.WaitForTimeoutAsync(1000);
+
+        // Check for authentication required message in command output
+        var output = Page.Locator(".command-output");
+        if (await output.IsVisibleAsync())
         {
-            Console.WriteLine("User is not logged in. Clicking login should redirect to GitHub.");
-            // We can't easily automate GitHub login without credentials. 
-            // But we can check if clicking it causes the crash.
-            await loginButton.ClickAsync();
-            
-            // Wait a bit to see if crash happens
-            await Page.WaitForTimeoutAsync(2000);
-            
-            // Check if we are redirected or still alive
-            Console.WriteLine($"Current URL after login click: {Page.Url}");
+            var outputText = await output.TextContentAsync();
+            Console.WriteLine($"Comment output: {outputText}");
+
+            // Should show authentication required message
+            Assert.That(
+                outputText,
+                Does.Contain("Authentication required").Or.Contain("login github"),
+                "Should prompt user to login when trying to comment without authentication"
+            );
         }
         else
         {
-            // User is logged in (if we somehow shared state, which we didn't, so this block is unlikely reachable in fresh browser)
-            // But let's assume we could script it.
-            
-            await Page.FillAsync("textarea.comment-input", "This is a test comment from Playwright.");
-            await Page.ClickAsync("button.submit-comment");
-            
-            // Check for success message
-            await Expect(Page.Locator(".comment-success")).ToBeVisibleAsync();
+            Assert.Fail("No command output displayed after comment attempt");
         }
+    }
+
+    [Test]
+    public async Task Comment_Command_Should_Show_In_Help()
+    {
+        // Navigate to a blog post
+        await Page.GotoAsync($"{_baseUrl}/blog/building-sheetlink-excel-processor");
+        await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+        // Find the terminal input
+        var terminalInput = Page.Locator("input.terminal-input").First;
+
+        // Type 'help' command
+        await terminalInput.FillAsync("help");
+        await terminalInput.PressAsync("Enter");
+
+        // Wait for output
+        await Page.WaitForTimeoutAsync(1000);
+
+        // Check for comment command in help text
+        var output = Page.Locator(".command-output");
+        if (await output.IsVisibleAsync())
+        {
+            var helpText = await output.TextContentAsync();
+            Console.WriteLine($"Help output length: {helpText?.Length}");
+
+            // Verify comment command is documented
+            Assert.That(helpText, Does.Contain("comment"));
+            Assert.That(helpText, Does.Contain("Comments"));
+        }
+    }
+
+    [Test]
+    public async Task Comments_Section_Should_Be_Visible()
+    {
+        // Navigate to a blog post
+        await Page.GotoAsync($"{_baseUrl}/blog/building-sheetlink-excel-processor");
+        await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+        // Check that comments section exists
+        var commentsSection = Page.Locator(".comments-section");
+        await Expect(commentsSection).ToBeVisibleAsync();
+
+        // Check for comments header
+        var commentsHeader = Page.Locator(".comments-header");
+        await Expect(commentsHeader).ToBeVisibleAsync();
+
+        var headerText = await commentsHeader.TextContentAsync();
+        Console.WriteLine($"Comments header: {headerText}");
+
+        // Should show comment count
+        Assert.That(headerText, Does.Contain("Comments"));
+    }
+
+    [Test]
+    public async Task Terminal_Input_Placeholder_Should_Show_Comment_Hint()
+    {
+        // Navigate to a blog post
+        await Page.GotoAsync($"{_baseUrl}/blog/building-sheetlink-excel-processor");
+        await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+        // Find the terminal input in the post page
+        var terminalInput = Page.Locator("input.terminal-input").First;
+        await Expect(terminalInput).ToBeVisibleAsync();
+
+        // Check placeholder text mentions comment command
+        var placeholder = await terminalInput.GetAttributeAsync("placeholder");
+        Console.WriteLine($"Placeholder: {placeholder}");
+
+        Assert.That(placeholder, Does.Contain("comment").IgnoreCase);
     }
 }
