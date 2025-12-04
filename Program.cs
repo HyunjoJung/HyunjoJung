@@ -4,6 +4,7 @@ using Serilog;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using AspNet.Security.OAuth.GitHub;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,16 @@ builder.Services.AddScoped<TerminalCommandService>();
 builder.Services.AddScoped<BrowserStorageService>();
 
 var app = builder.Build();
+
+// Configure Forwarded Headers for proxy servers like Cloudflare/Nginx
+var forwardedHeadersOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+};
+// Clear default restrictions to trust all proxies (required for Cloudflare Tunnel)
+forwardedHeadersOptions.KnownIPNetworks.Clear();
+forwardedHeadersOptions.KnownProxies.Clear();
+app.UseForwardedHeaders(forwardedHeadersOptions);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
