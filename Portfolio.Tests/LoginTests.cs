@@ -17,7 +17,7 @@ public class LoginTests : PageTest
     }
 
     [Test]
-    public async Task Terminal_Login_Command_Should_Show_URL()
+    public async Task Terminal_Login_Command_Should_Navigate()
     {
         // Navigate to homepage
         await Page.GotoAsync(_baseUrl);
@@ -32,24 +32,18 @@ public class LoginTests : PageTest
         await terminalInput.FillAsync("login github");
         await terminalInput.PressAsync("Enter");
 
-        // Wait for command output
-        await Page.WaitForTimeoutAsync(1000);
+        // Wait for navigation
+        await Page.WaitForTimeoutAsync(2000);
 
-        // Check for login URL in command output
-        var output = Page.Locator(".command-output");
-        if (await output.IsVisibleAsync())
-        {
-            var outputText = await output.TextContentAsync();
-            Console.WriteLine($"Login output: {outputText}");
+        // Check if URL changed to /login or GitHub OAuth
+        var currentUrl = Page.Url;
+        Console.WriteLine($"Current URL after login command: {currentUrl}");
 
-            // Should show login URL
-            Assert.That(outputText, Does.Contain("/login"));
-            Assert.That(outputText, Does.Contain("GitHub OAuth") | Does.Contain("authenticate"));
-        }
-        else
-        {
-            Assert.Fail("No command output displayed after login command");
-        }
+        // Should navigate to /login endpoint or GitHub OAuth page
+        Assert.That(
+            currentUrl.Contains("/login") || currentUrl.Contains("github.com"),
+            $"Expected navigation to /login or GitHub, but got: {currentUrl}"
+        );
     }
 
     [Test]
