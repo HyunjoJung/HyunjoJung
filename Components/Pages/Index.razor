@@ -132,7 +132,11 @@
 
             if (!string.IsNullOrEmpty(result.NavigateTo))
             {
-                Navigation.NavigateTo(result.NavigateTo);
+                // Force load for auth endpoints (/login, /logout) to hit the middleware
+                bool forceLoad = result.NavigateTo.Equals("/login", StringComparison.OrdinalIgnoreCase) || 
+                                 result.NavigateTo.Equals("/logout", StringComparison.OrdinalIgnoreCase);
+                                 
+                Navigation.NavigateTo(result.NavigateTo, forceLoad);
             }
             else if (!string.IsNullOrEmpty(result.Output))
             {
