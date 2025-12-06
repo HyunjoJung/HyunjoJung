@@ -157,25 +157,26 @@ Examples:
                 return new CommandResult
                 {
                     Success = true,
-                    Output = @"total 12
-drwxr-xr-x  3 hyunjo dev 4096 Dec  3 09:00 .
-drwxr-xr-x 18 root   root 4096 Dec  2 10:00 ..
-drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
--rw-r--r--  1 hyunjo dev 1234 Dec  2 10:30 about.md
--rw-r--r--  1 hyunjo dev  567 Dec  2 10:30 README.md"
+                    Output = $@"total 3
+drwxr-xr-x  3 hyunjo dev 4096 {DateTime.Now:MMM dd HH:mm} .
+drwxr-xr-x 18 root   root 4096 {DateTime.Now:MMM dd HH:mm} ..
+drwxr-xr-x  2 hyunjo dev 4096 {DateTime.Now:MMM dd HH:mm} blog/
+drwxr-xr-x  2 hyunjo dev 4096 {DateTime.Now:MMM dd HH:mm} about/"
                 };
             }
             return new CommandResult
             {
                 Success = true,
-                Output = @"total 3
-drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
--rw-r--r--  1 hyunjo dev 1234 Dec  2 10:30 about.md
--rw-r--r--  1 hyunjo dev  567 Dec  2 10:30 README.md"
+                Output = $@"total 2
+drwxr-xr-x  2 hyunjo dev 4096 {DateTime.Now:MMM dd HH:mm} blog/
+drwxr-xr-x  2 hyunjo dev 4096 {DateTime.Now:MMM dd HH:mm} about/"
             };
         }
 
-        if (targetPath.Contains("blog"))
+        // Normalize path for consistent checking
+        var checkPath = targetPath.TrimEnd('/');
+        
+        if (checkPath.EndsWith("blog") || checkPath.EndsWith("/blog"))
         {
             var posts = await _blogService.GetAllPostsAsync();
             var output = new StringBuilder();
@@ -194,11 +195,11 @@ drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
             foreach (var post in posts.Take(20))
             {
                 var permissions = "-rw-r--r--";
-                var size = post.ReadTimeMinutes * 200; // Approximate words
+                var sizeString = $"{post.ReadTimeMinutes}min"; // Use read time as size proxy
                 var date = post.PublishedDate.ToString("MMM dd HH:mm");
-                var tags = string.Join(",", post.Tags.Take(2));
+                var tagString = post.Tags != null && post.Tags.Any() ? $" # {string.Join(" ", post.Tags)}" : "";
 
-                output.AppendLine($"{permissions}  1 hyunjo dev {size,5} {date} {post.Slug}.md  # {tags}");
+                output.AppendLine($"{permissions}  1 hyunjo dev {sizeString,5} {date} {post.Slug}.md{tagString}");
             }
 
             if (posts.Count > 20)
@@ -207,6 +208,17 @@ drwxr-xr-x  2 hyunjo dev 4096 Dec  2 10:30 blog/
             }
 
             return new CommandResult { Success = true, Output = output.ToString().TrimEnd() };
+        }
+        
+        if (checkPath.EndsWith("about") || checkPath.EndsWith("/about"))
+        {
+            return new CommandResult 
+            { 
+                Success = true, 
+                Output = showAll 
+                    ? $"total 3\ndrwxr-xr-x  2 hyunjo dev 4096 {DateTime.Now:MMM dd HH:mm} .\ndrwxr-xr-x  3 hyunjo dev 4096 {DateTime.Now:MMM dd HH:mm} ..\n-rw-r--r--  1 hyunjo dev 2048 {DateTime.Now:MMM dd HH:mm} index.md"
+                    : $"-rw-r--r--  1 hyunjo dev 2048 {DateTime.Now:MMM dd HH:mm} index.md"
+            };
         }
 
         return new CommandResult { Success = false, Output = $"ls: cannot access '{targetPath}': No such file or directory" };
