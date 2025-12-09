@@ -144,23 +144,39 @@
         <div class="section-header">
             <span class="prompt">#</span> @(currentCulture == "ko" ? "경력" : "Professional Experience")
         </div>
-        <p class="section-subtitle">@(currentCulture == "ko" ? "PR 에이전시에서 진행한 엔터프라이즈급 프로젝트" : "Enterprise-scale projects at a PR agency")</p>
+        <p class="section-subtitle">@(currentCulture == "ko" ? "PR 에이전시에서 진행한 상용 프로젝트" : "Enterprise-scale projects at a PR agency")</p>
 
         <div class="work-grid">
             <div class="work-card">
                 <div class="work-title-line">
                     <span class="prompt">></span>
-                    <span class="work-title">Community & Newsroom Monitoring Platform</span>
+                    <span class="work-title">@(currentCulture == "ko" ? "커뮤니티 & 뉴스룸 모니터링 플랫폼" : "Community & Newsroom Monitoring Platform")</span>
                 </div>
-                <div class="work-client">client: <span class="client-name">Global Electronics Company</span></div>
+                <div class="work-client">client: <span class="client-name">@(currentCulture == "ko" ? "글로벌 전자기업" : "Global Electronics Company")</span></div>
                 <p class="work-description">
-                    Automated monitoring system for 12 Korean communities and 59 global newsrooms.
-                    AI-powered classification (GPT + keyword analysis) categorizes posts by product lines (TV/AV/EB).
+                    @if (currentCulture == "ko")
+                    {
+                        @:12개 한국 커뮤니티와 59개 글로벌 뉴스룸 자동 모니터링 시스템. AI 기반 분류(GPT + 키워드 분석)로 제품 카테고리별 게시글 분류.
+                    }
+                    else
+                    {
+                        @:Automated monitoring system for 12 Korean communities and 59 global newsrooms.
+                        @:AI-powered classification (GPT + keyword analysis) categorizes posts by product categories.
+                    }
                 </p>
                 <div class="work-features">
-                    <div class="highlight-item"><span class="bullet">•</span> Real-time crawling with Playwright/Puppeteer browser automation</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Weekly Excel reports with automatic categorization</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Desktop app (Electron + NestJS + React)</div>
+                    @if (currentCulture == "ko")
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> Playwright/Puppeteer 브라우저 자동화 실시간 크롤링</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 자동 분류 주간 Excel 리포트</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 데스크톱 앱 (Electron + NestJS + React)</div>
+                    }
+                    else
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> Real-time crawling with Playwright/Puppeteer browser automation</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Weekly Excel reports with automatic categorization</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Desktop app (Electron + NestJS + React)</div>
+                    }
                 </div>
                 <div class="tech-stack">
                     <span class="tech-badge">NestJS</span>
@@ -174,16 +190,32 @@
             <div class="work-card">
                 <div class="work-title-line">
                     <span class="prompt">></span>
-                    <span class="work-title">News Collection Automation System</span>
+                    <span class="work-title">@(currentCulture == "ko" ? "뉴스 수집 자동화 시스템" : "News Collection Automation System")</span>
                 </div>
-                <div class="work-client">client: <span class="client-name">Global Game Publisher</span></div>
+                <div class="work-client">client: <span class="client-name">@(currentCulture == "ko" ? "글로벌 게임 퍼블리셔" : "Global Game Publisher")</span></div>
                 <p class="work-description">
-                    Serverless news aggregation system collecting 300+ daily articles from Naver API, Google RSS, and 240+ game/IT news sites.
+                    @if (currentCulture == "ko")
+                    {
+                        @:Naver API, Google RSS, 240개 이상의 게임/IT 뉴스 사이트에서 일일 300개 이상의 기사를 수집하는 서버리스 뉴스 집계 시스템.
+                    }
+                    else
+                    {
+                        @:Serverless news aggregation system collecting 300+ daily articles from Naver API, Google RSS, and 240+ game/IT news sites.
+                    }
                 </p>
                 <div class="work-features">
-                    <div class="highlight-item"><span class="bullet">•</span> AWS Step Functions orchestrating 8 Lambda functions</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Parallel crawling (Map State: 40 concurrent sites)</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Automated daily email reports with statistics dashboard</div>
+                    @if (currentCulture == "ko")
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> 8개 Lambda 함수를 오케스트레이션하는 AWS Step Functions</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 병렬 크롤링 (Map State: 40개 사이트 동시 처리)</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 통계 대시보드가 포함된 일일 이메일 리포트 자동화</div>
+                    }
+                    else
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> AWS Step Functions orchestrating 8 Lambda functions</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Parallel crawling (Map State: 40 concurrent sites)</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Automated daily email reports with statistics dashboard</div>
+                    }
                 </div>
                 <div class="tech-stack">
                     <span class="tech-badge">AWS Lambda</span>
@@ -197,17 +229,34 @@
             <div class="work-card">
                 <div class="work-title-line">
                     <span class="prompt">></span>
-                    <span class="work-title">News Parsing SaaS API</span>
+                    <span class="work-title">@(currentCulture == "ko" ? "뉴스 파싱 SaaS API" : "News Parsing SaaS API")</span>
                 </div>
-                <div class="work-client">client: <span class="client-name">Internal PR Tool</span></div>
+                <div class="work-client">client: <span class="client-name">@(currentCulture == "ko" ? "내부 PR 도구" : "Internal PR Tool")</span></div>
                 <p class="work-description">
-                    Serverless API service for parsing 698 Korean news sites and community platforms.
-                    3-tier Lambda architecture (Router → CSR/SSR) optimized for cost efficiency.
+                    @if (currentCulture == "ko")
+                    {
+                        @:698개 한국 뉴스 사이트 및 커뮤니티 플랫폼 파싱 서버리스 API 서비스.
+                        @:비용 효율성을 위해 최적화된 3계층 Lambda 아키텍처 (Router → CSR/SSR).
+                    }
+                    else
+                    {
+                        @:Serverless API service for parsing 698 Korean news sites and community platforms.
+                        @:3-tier Lambda architecture (Router → CSR/SSR) optimized for cost efficiency.
+                    }
                 </p>
                 <div class="work-features">
-                    <div class="highlight-item"><span class="bullet">•</span> Auto-detection of CSR (21 sites) vs SSR (677 sites)</div>
-                    <div class="highlight-item"><span class="bullet">•</span> 87% cost reduction (SSR: 512MB, CSR: 2GB separation)</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Admin dashboard for 698 domain management</div>
+                    @if (currentCulture == "ko")
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> CSR (21개 사이트) vs SSR (677개 사이트) 자동 감지</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 87% 비용 절감 (SSR: 512MB, CSR: 2GB 분리)</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 698개 도메인 관리를 위한 관리자 대시보드</div>
+                    }
+                    else
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> Auto-detection of CSR (21 sites) vs SSR (677 sites)</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 87% cost reduction (SSR: 512MB, CSR: 2GB separation)</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Admin dashboard for 698 domain management</div>
+                    }
                 </div>
                 <div class="tech-stack">
                     <span class="tech-badge">AWS Lambda</span>
