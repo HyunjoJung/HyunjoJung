@@ -12,7 +12,7 @@
 
 - 🏢 **Current:** IT Specialist at **Prain Global (HR Team)**
 - 💡 **Interests:** AI Integration, Cloud-based Services, Backend Architecture Design
-- 🧠 **Recent Focus:** Participating in **Vision AI & LLM** projects
+- 🧠 **Recent Focus:** Developer Experience (DX) & AI Experience (AX)
 
 ---
 
