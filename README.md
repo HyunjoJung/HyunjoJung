@@ -92,5 +92,7 @@ Stateless business card generator that transforms Excel employee data into Power
 
 ## 📈 GitHub Stats
 
-![HyunjoJung's GitHub stats](https://github-readme-stats.vercel.app/api?username=HyunjoJung&show_icons=true&theme=tokyonight)
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=HyunjoJung&layout=compact&theme=tokyonight)
+[![GitHub Streak](https://streak-stats.demolab.com/?user=HyunjoJung&theme=tokyonight)](https://git.io/streak-stats)
+
+[![HyunjoJung's GitHub stats](https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api?username=HyunjoJung&show_icons=true&theme=tokyonight&hide_border=true)](https://github.com/HyunjoJung)
+[![Top Langs](https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api/top-langs/?username=HyunjoJung&layout=compact&theme=tokyonight&hide_border=true)](https://github.com/HyunjoJung)
