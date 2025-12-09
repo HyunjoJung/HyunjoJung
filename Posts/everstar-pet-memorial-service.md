@@ -25,11 +25,13 @@ EVER-STAR is a compassionate web platform designed to help pet owners cope with 
 2. **Complete healing quests** through puzzles, video calls, and letter writing
 3. **Connect with others** who understand the unique pain of losing a pet
 
-**Development Period**: January - April 2024 (4 months)
+**Development Period**: January - February 2024 (8 weeks)
+
+**Team**: 5 developers (3 Frontend, 2 Backend)
 
 ## My Role: Frontend Developer
 
-As one of two frontend developers, I focused on building the component architecture and interactive features:
+As one of three frontend developers, I focused on building the component architecture and interactive features:
 
 ### Key Responsibilities
 - **Atomic Design implementation** with 265+ React components
@@ -1033,7 +1035,7 @@ const { data, isLoading } = useFetchPetDetails(petId);
 - **Lines of Code**: ~50,000 (frontend only)
 - **Bundle Size**: 2.8MB (pre-gzip)
 - **Lighthouse Score**: 85 (Performance), 100 (Accessibility)
-- **Development Time**: 4 months (2 frontend devs)
+- **Development Time**: 8 weeks (3 Frontend, 2 Backend)
 
 ## Future Improvements
 
