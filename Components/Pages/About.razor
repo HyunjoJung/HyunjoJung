@@ -91,13 +91,30 @@
                     <span class="project-status-badge">LIVE</span>
                 </div>
                 <p class="project-description">
-                    Free online tool to extract hyperlinks from Excel files and merge Title + URL columns into clickable links.
+                    @if (currentCulture == "ko")
+                    {
+                        @:Excel 파일에서 하이퍼링크를 추출하고 제목 + URL 열을 클릭 가능한 링크로 병합하는 무료 온라인 도구.
+                    }
+                    else
+                    {
+                        @:Free online tool to extract hyperlinks from Excel files and merge Title + URL columns into clickable links.
+                    }
                 </p>
                 <div class="project-highlights">
-                    <div class="highlight-item"><span class="bullet">•</span> No server storage - all processing in-memory (privacy-focused)</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Supports .xlsx/.xls formats with DocumentFormat.OpenXml</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Built-in health checks and Prometheus metrics</div>
-                    <div class="highlight-item"><span class="bullet">•</span> CI/CD with GitHub Actions → Docker Hub → Self-hosted Ubuntu</div>
+                    @if (currentCulture == "ko")
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> 서버 저장소 없음 - 모든 처리는 메모리에서 (프라이버시 중심)</div>
+                        <div class="highlight-item"><span class="bullet">•</span> DocumentFormat.OpenXml로 .xlsx/.xls 형식 지원</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 헬스 체크 및 Prometheus 메트릭 내장</div>
+                        <div class="highlight-item"><span class="bullet">•</span> GitHub Actions → Docker Hub → 자체 호스팅 Ubuntu로 CI/CD</div>
+                    }
+                    else
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> No server storage - all processing in-memory (privacy-focused)</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Supports .xlsx/.xls formats with DocumentFormat.OpenXml</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Built-in health checks and Prometheus metrics</div>
+                        <div class="highlight-item"><span class="bullet">•</span> CI/CD with GitHub Actions → Docker Hub → Self-hosted Ubuntu</div>
+                    }
                 </div>
                 <div class="tech-stack">
                     <span class="tech-badge">ASP.NET Core 10</span>
@@ -118,13 +135,30 @@
                     <span class="project-status-badge">LIVE</span>
                 </div>
                 <p class="project-description">
-                    Stateless business card generator that transforms Excel employee data into PowerPoint cards with QR codes for vCards.
+                    @if (currentCulture == "ko")
+                    {
+                        @:Excel 직원 데이터를 vCard QR 코드가 포함된 PowerPoint 명함으로 변환하는 무상태 명함 생성기.
+                    }
+                    else
+                    {
+                        @:Stateless business card generator that transforms Excel employee data into PowerPoint cards with QR codes for vCards.
+                    }
                 </p>
                 <div class="project-highlights">
-                    <div class="highlight-item"><span class="bullet">•</span> Database-free design - no persistent storage</div>
-                    <div class="highlight-item"><span class="bullet">•</span> QR code generation with vCard data embedding</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Formatting preservation via OpenXML SDK</div>
-                    <div class="highlight-item"><span class="bullet">•</span> Security-first: CSP headers, rate limiting, health checks</div>
+                    @if (currentCulture == "ko")
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> 데이터베이스 없는 설계 - 영구 저장소 없음</div>
+                        <div class="highlight-item"><span class="bullet">•</span> vCard 데이터가 내장된 QR 코드 생성</div>
+                        <div class="highlight-item"><span class="bullet">•</span> OpenXML SDK를 통한 서식 보존</div>
+                        <div class="highlight-item"><span class="bullet">•</span> 보안 우선: CSP 헤더, 속도 제한, 헬스 체크</div>
+                    }
+                    else
+                    {
+                        <div class="highlight-item"><span class="bullet">•</span> Database-free design - no persistent storage</div>
+                        <div class="highlight-item"><span class="bullet">•</span> QR code generation with vCard data embedding</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Formatting preservation via OpenXML SDK</div>
+                        <div class="highlight-item"><span class="bullet">•</span> Security-first: CSP headers, rate limiting, health checks</div>
+                    }
                 </div>
                 <div class="tech-stack">
                     <span class="tech-badge">ASP.NET Core 10</span>
