@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Navigation -->
+  <data name="Nav.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Nav.Blog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="Nav.About" xml:space="preserve">
+    <value>About</value>
+  </data>
+
+  <!-- Home Page -->
+  <data name="Home.Welcome" xml:space="preserve">
+    <value>Welcome to my terminal</value>
+  </data>
+  <data name="Home.Role" xml:space="preserve">
+    <value>Developer · Open Source Enthusiast</value>
+  </data>
+  <data name="Home.BlogDesc" xml:space="preserve">
+    <value>Technical articles and tutorials</value>
+  </data>
+  <data name="Home.AboutDesc" xml:space="preserve">
+    <value>About me and my experience</value>
+  </data>
+  <data name="Home.QuickCommands" xml:space="preserve">
+    <value>Quick commands:</value>
+  </data>
+  <data name="Home.BrowseArticles" xml:space="preserve">
+    <value>Browse articles</value>
+  </data>
+  <data name="Home.LearnAboutMe" xml:space="preserve">
+    <value>Learn about me</value>
+  </data>
+  <data name="Home.ShowCommands" xml:space="preserve">
+    <value>Show all commands</value>
+  </data>
+
+  <!-- Blog Page -->
+  <data name="Blog.Loading" xml:space="preserve">
+    <value>[Loading posts...]</value>
+  </data>
+  <data name="Blog.SearchPlaceholder" xml:space="preserve">
+    <value>search posts...</value>
+  </data>
+  <data name="Blog.ActiveFilter" xml:space="preserve">
+    <value>Active filter:</value>
+  </data>
+  <data name="Blog.Total" xml:space="preserve">
+    <value>total</value>
+  </data>
+  <data name="Blog.Visible" xml:space="preserve">
+    <value>visible</value>
+  </data>
+  <data name="Blog.Featured" xml:space="preserve">
+    <value>featured</value>
+  </data>
+  <data name="Blog.Tags" xml:space="preserve">
+    <value>tags</value>
+  </data>
+  <data name="Blog.FeaturedPosts" xml:space="preserve">
+    <value>Featured Posts</value>
+  </data>
+  <data name="Blog.AllPosts" xml:space="preserve">
+    <value>All Posts</value>
+  </data>
+  <data name="Blog.BrowseByTag" xml:space="preserve">
+    <value>Browse by Tag</value>
+  </data>
+
+  <!-- Common -->
+  <data name="Common.ReadMore" xml:space="preserve">
+    <value>Read more</value>
+  </data>
+  <data name="Common.Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Common.Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+</root>

@@ -1,10 +1,13 @@
 using Portfolio.Components;
 using Portfolio.Services;
+using Portfolio.Resources;
 using Serilog;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using AspNet.Security.OAuth.GitHub;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,30 @@ builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
+
+// Add Localization
+builder.Services.AddLocalization();
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("en"),
+        new CultureInfo("ko")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("en");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    // Priority: QueryString > Cookie > Accept-Language Header
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider(),
+        new AcceptLanguageHeaderRequestCultureProvider()
+    };
+});
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
@@ -61,6 +88,7 @@ builder.Services.AddSingleton<CommentService>();
 builder.Services.AddSingleton<GitHubService>();
 builder.Services.AddScoped<TerminalCommandService>();
 builder.Services.AddScoped<BrowserStorageService>();
+builder.Services.AddScoped<LocaleService>();
 
 var app = builder.Build();
 
@@ -73,6 +101,9 @@ var forwardedHeadersOptions = new ForwardedHeadersOptions
 forwardedHeadersOptions.KnownIPNetworks.Clear();
 forwardedHeadersOptions.KnownProxies.Clear();
 app.UseForwardedHeaders(forwardedHeadersOptions);
+
+// Use Request Localization
+app.UseRequestLocalization();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

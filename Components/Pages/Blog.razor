@@ -2,10 +2,13 @@
 @using Portfolio.Services
 @using Portfolio.Models
 @using Portfolio.Components.Shared
+@using Microsoft.Extensions.Localization
+@using Portfolio.Resources
 @inject BlogService BlogService
 @inject TerminalCommandService CommandService
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject IStringLocalizer<SharedResources> Localizer
 @rendermode InteractiveServer
 
 <PageTitle>Blog - Hyunjo Jung</PageTitle>
@@ -42,7 +45,7 @@
 ██████╔╝███████╗╚██████╔╝╚██████╔╝
 ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝
                 </pre>
-                <p class="loading-text">[Loading posts...]</p>
+                <p class="loading-text">@Localizer["Blog.Loading"]</p>
             </div>
         }
         else
@@ -57,7 +60,7 @@
                            class="search-input"
                            @bind="searchQuery"
                            @bind:event="oninput"
-                           placeholder="search posts..."
+                           placeholder="@Localizer["Blog.SearchPlaceholder"]"
                            @onkeyup="FilterPosts" />
                     <span class="command">"</span>
                 </div>
@@ -65,7 +68,7 @@
                 @if (!string.IsNullOrEmpty(selectedTag))
                 {
                     <div class="active-filter">
-                        <span class="filter-label">Active filter:</span>
+                        <span class="filter-label">@Localizer["Blog.ActiveFilter"]</span>
                         <span class="filter-tag">@@@selectedTag</span>
                         <button class="clear-filter" @onclick="ClearTagFilter">✕</button>
                     </div>
@@ -73,17 +76,17 @@
             </div>
 
             <div class="blog-stats">
-                <span class="stat">total @posts.Count</span>
-                <span class="stat">@filteredPosts.Count visible</span>
-                <span class="stat">@featuredPosts.Count featured</span>
-                <span class="stat">@tags.Count tags</span>
+                <span class="stat">@Localizer["Blog.Total"] @posts.Count</span>
+                <span class="stat">@filteredPosts.Count @Localizer["Blog.Visible"]</span>
+                <span class="stat">@featuredPosts.Count @Localizer["Blog.Featured"]</span>
+                <span class="stat">@tags.Count @Localizer["Blog.Tags"]</span>
             </div>
 
             @if (filteredFeaturedPosts.Any())
             {
                 <section class="featured-section">
                     <div class="section-header">
-                        <span class="prompt">#</span> Featured Posts
+                        <span class="prompt">#</span> @Localizer["Blog.FeaturedPosts"]
                     </div>
                     @foreach (var post in filteredFeaturedPosts)
                     {
@@ -114,7 +117,7 @@
 
             <section class="posts-section">
                 <div class="section-header">
-                    <span class="prompt">#</span> All Posts
+                    <span class="prompt">#</span> @Localizer["Blog.AllPosts"]
                 </div>
                 <div class="posts-list">
                     @foreach (var post in filteredRegularPosts)
@@ -154,7 +157,7 @@
             {
                 <section class="tags-section">
                     <div class="section-header">
-                        <span class="prompt">#</span> Browse by Tag
+                        <span class="prompt">#</span> @Localizer["Blog.BrowseByTag"]
                     </div>
                     <div class="tags-cloud">
                         @foreach (var tag in tags)

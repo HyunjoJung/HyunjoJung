@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Navigation -->
+  <data name="Nav.Home" xml:space="preserve">
+    <value>홈</value>
+  </data>
+  <data name="Nav.Blog" xml:space="preserve">
+    <value>블로그</value>
+  </data>
+  <data name="Nav.About" xml:space="preserve">
+    <value>소개</value>
+  </data>
+
+  <!-- Home Page -->
+  <data name="Home.Welcome" xml:space="preserve">
+    <value>환영합니다</value>
+  </data>
+  <data name="Home.Role" xml:space="preserve">
+    <value>개발자 · 오픈소스 기여자</value>
+  </data>
+  <data name="Home.BlogDesc" xml:space="preserve">
+    <value>개발 이야기</value>
+  </data>
+  <data name="Home.AboutDesc" xml:space="preserve">
+    <value>내 소개</value>
+  </data>
+  <data name="Home.QuickCommands" xml:space="preserve">
+    <value>빠른 명령</value>
+  </data>
+  <data name="Home.BrowseArticles" xml:space="preserve">
+    <value>글 보러가기</value>
+  </data>
+  <data name="Home.LearnAboutMe" xml:space="preserve">
+    <value>소개 보기</value>
+  </data>
+  <data name="Home.ShowCommands" xml:space="preserve">
+    <value>전체 명령어</value>
+  </data>
+
+  <!-- Blog Page -->
+  <data name="Blog.Loading" xml:space="preserve">
+    <value>불러오는 중...</value>
+  </data>
+  <data name="Blog.SearchPlaceholder" xml:space="preserve">
+    <value>검색...</value>
+  </data>
+  <data name="Blog.ActiveFilter" xml:space="preserve">
+    <value>필터</value>
+  </data>
+  <data name="Blog.Total" xml:space="preserve">
+    <value>전체</value>
+  </data>
+  <data name="Blog.Visible" xml:space="preserve">
+    <value>표시</value>
+  </data>
+  <data name="Blog.Featured" xml:space="preserve">
+    <value>추천</value>
+  </data>
+  <data name="Blog.Tags" xml:space="preserve">
+    <value>태그</value>
+  </data>
+  <data name="Blog.FeaturedPosts" xml:space="preserve">
+    <value>추천 글</value>
+  </data>
+  <data name="Blog.AllPosts" xml:space="preserve">
+    <value>전체 글</value>
+  </data>
+  <data name="Blog.BrowseByTag" xml:space="preserve">
+    <value>태그 보기</value>
+  </data>
+
+  <!-- Common -->
+  <data name="Common.ReadMore" xml:space="preserve">
+    <value>더 읽기</value>
+  </data>
+  <data name="Common.Back" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="Common.Language" xml:space="preserve">
+    <value>언어</value>
+  </data>
+</root>

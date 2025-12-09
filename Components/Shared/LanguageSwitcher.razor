@@ -1,0 +1,66 @@
+@using Portfolio.Services
+@inject LocaleService LocaleService
+@rendermode InteractiveServer
+
+<div class="lang-switch">
+    <button class="lang-toggle" @onclick="ToggleLanguage" title="@toggleTitle">
+        <span class="lang-icon">🌐</span>
+        <span class="lang-text">@otherLangName</span>
+    </button>
+</div>
+
+<style>
+    .lang-switch {
+        display: inline-block;
+    }
+
+    .lang-toggle {
+        background: transparent;
+        border: none;
+        color: #6272a4;
+        font-family: 'Courier New', monospace;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .lang-toggle:hover {
+        color: #bd93f9;
+    }
+
+    .lang-icon {
+        font-size: 0.9rem;
+        opacity: 0.7;
+    }
+
+    .lang-text {
+        opacity: 0.8;
+    }
+
+    .lang-toggle:hover .lang-icon,
+    .lang-toggle:hover .lang-text {
+        opacity: 1;
+    }
+</style>
+
+@code {
+    private string otherLangName = "한국어";
+    private string toggleTitle = "Switch to Korean";
+
+    protected override void OnInitialized()
+    {
+        var currentCulture = LocaleService.GetCurrentCultureCode();
+        otherLangName = LocaleService.GetOtherCultureName();
+        toggleTitle = currentCulture == "ko" ? "Switch to English" : "한국어로 전환";
+    }
+
+    private async Task ToggleLanguage()
+    {
+        var otherCulture = LocaleService.GetOtherCultureCode();
+        await LocaleService.SetCultureAsync(otherCulture);
+    }
+}

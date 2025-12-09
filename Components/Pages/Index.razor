@@ -1,8 +1,11 @@
 @page "/"
 @using Portfolio.Services
+@using Microsoft.Extensions.Localization
+@using Portfolio.Resources
 @inject TerminalCommandService CommandService
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject IStringLocalizer<SharedResources> Localizer
 @rendermode InteractiveServer
 
 <PageTitle>Hyunjo Jung - Developer Portfolio</PageTitle>
@@ -41,8 +44,8 @@
             </pre>
 
             <div class="intro">
-                <h1><span class="hash">#</span> Welcome to my terminal</h1>
-                <p class="description">Developer, Blogger, Open Source Enthusiast</p>
+                <h1><span class="hash">#</span> @Localizer["Home.Welcome"]</h1>
+                <p class="description">@Localizer["Home.Role"]</p>
             </div>
 
             <div class="directory-listing">
@@ -59,14 +62,14 @@
                         <span class="size">4.0K</span>
                         <span class="date">Dec 02 18:00</span>
                         <span class="name directory-name">blog/</span>
-                        <span class="description">Technical articles and tutorials</span>
+                        <span class="description">@Localizer["Home.BlogDesc"]</span>
                     </div>
                     <div class="file-item directory" @onclick='() => Navigation.NavigateTo("/about")'>
                         <span class="permissions">drwxr-xr-x</span>
                         <span class="size">4.0K</span>
                         <span class="date">Dec 02 18:00</span>
                         <span class="name directory-name">about/</span>
-                        <span class="description">About me and my experience</span>
+                        <span class="description">@Localizer["Home.AboutDesc"]</span>
                     </div>
                     <div class="file-item file">
                         <span class="permissions">-rw-r--r--</span>
@@ -80,11 +83,11 @@
 
             <div class="quick-commands">
                 <div class="command-hint">
-                    <span class="hint-label">Quick commands:</span>
+                    <span class="hint-label">@Localizer["Home.QuickCommands"]</span>
                     <div class="hints">
-                        <code>cd blog</code> <span class="hint-desc">Browse articles</span>
-                        <code>cd about</code> <span class="hint-desc">Learn about me</span>
-                        <code>help</code> <span class="hint-desc">Show all commands</span>
+                        <code>cd blog</code> <span class="hint-desc">@Localizer["Home.BrowseArticles"]</span>
+                        <code>cd about</code> <span class="hint-desc">@Localizer["Home.LearnAboutMe"]</span>
+                        <code>help</code> <span class="hint-desc">@Localizer["Home.ShowCommands"]</span>
                     </div>
                 </div>
             </div>

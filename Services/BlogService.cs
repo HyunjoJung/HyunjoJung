@@ -11,16 +11,18 @@ public class BlogService : IDisposable
 {
     private readonly IWebHostEnvironment _env;
     private readonly ILogger<BlogService> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly MarkdownPipeline _pipeline;
-    private List<BlogPost>? _cachedPosts;
+    private Dictionary<string, List<BlogPost>> _cachedPostsByCulture = new();
     private FileSystemWatcher? _fileWatcher;
     private Timer? _debounceTimer;
     private readonly object _debounceLock = new();
 
-    public BlogService(IWebHostEnvironment env, ILogger<BlogService> logger)
+    public BlogService(IWebHostEnvironment env, ILogger<BlogService> logger, IHttpContextAccessor httpContextAccessor)
     {
         _env = env;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
         _pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
             .UseYamlFrontMatter() // Enable YAML front matter parsing
@@ -103,8 +105,12 @@ public class BlogService : IDisposable
 
     public async Task<List<BlogPost>> GetAllPostsAsync()
     {
-        if (_cachedPosts != null)
-            return _cachedPosts;
+        // Get current culture
+        var culture = _httpContextAccessor.HttpContext?.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>()?.RequestCulture.Culture.TwoLetterISOLanguageName ?? "en";
+
+        // Check if we have cached posts for this culture
+        if (_cachedPostsByCulture.TryGetValue(culture, out var cachedPosts))
+            return cachedPosts;
 
         var posts = new List<BlogPost>();
         var postsPath = Path.Combine(_env.ContentRootPath, "Posts");
@@ -119,18 +125,71 @@ public class BlogService : IDisposable
 
         foreach (var file in files)
         {
-            var post = await ParseMarkdownFileAsync(file);
+            var fileName = Path.GetFileNameWithoutExtension(file);
+
+            // Skip localized versions (e.g., filename.ko.md) - they're loaded dynamically
+            if (fileName.Contains(".ko") || fileName.Contains(".ja") || fileName.Contains(".zh"))
+                continue;
+
+            // For non-English cultures, try to load localized version first
+            BlogPost? post = null;
+            if (culture != "en")
+            {
+                var localizedFileName = $"{fileName}.{culture}.md";
+                var localizedFilePath = Path.Combine(postsPath, localizedFileName);
+
+                if (File.Exists(localizedFilePath))
+                {
+                    post = await ParseMarkdownFileAsync(localizedFilePath);
+                    if (post != null)
+                    {
+                        // Keep the original slug (without .ko) for URL consistency
+                        post.Slug = fileName;
+                    }
+                }
+            }
+
+            // Fallback to English version if no localized version exists
+            if (post == null)
+            {
+                post = await ParseMarkdownFileAsync(file);
+            }
+
             if (post != null)
                 posts.Add(post);
         }
 
-        _cachedPosts = posts.OrderByDescending(p => p.PublishedDate).ToList();
-        _logger.LogInformation("Successfully loaded and cached {PostCount} blog posts.", _cachedPosts.Count);
-        return _cachedPosts;
+        var sortedPosts = posts.OrderByDescending(p => p.PublishedDate).ToList();
+        _cachedPostsByCulture[culture] = sortedPosts;
+        _logger.LogInformation("Successfully loaded and cached {PostCount} blog posts for culture '{Culture}'.", sortedPosts.Count, culture);
+        return sortedPosts;
     }
 
     public async Task<BlogPost?> GetPostBySlugAsync(string slug)
     {
+        // Get current culture
+        var culture = _httpContextAccessor.HttpContext?.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>()?.RequestCulture.Culture.TwoLetterISOLanguageName ?? "en";
+
+        // Try to load localized version first (e.g., slug.ko.md for Korean)
+        if (culture != "en")
+        {
+            var localizedSlug = $"{slug}.{culture}";
+            var postsPath = Path.Combine(_env.ContentRootPath, "Posts");
+            var localizedFilePath = Path.Combine(postsPath, $"{localizedSlug}.md");
+
+            if (File.Exists(localizedFilePath))
+            {
+                var localizedPost = await ParseMarkdownFileAsync(localizedFilePath);
+                if (localizedPost != null)
+                {
+                    // Keep the original slug (without .ko) for URL consistency
+                    localizedPost.Slug = slug;
+                    return localizedPost;
+                }
+            }
+        }
+
+        // Fallback to default (English) version
         var posts = await GetAllPostsAsync();
         return posts.FirstOrDefault(p => p.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
     }
@@ -264,8 +323,8 @@ public class BlogService : IDisposable
 
     public void ClearCache()
     {
-        _cachedPosts = null;
-        _logger.LogInformation("Blog post cache has been cleared.");
+        _cachedPostsByCulture.Clear();
+        _logger.LogInformation("Blog post cache has been cleared for all cultures.");
     }
 
     public void Dispose()

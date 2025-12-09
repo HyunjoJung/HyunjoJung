@@ -2,6 +2,7 @@
 @using Portfolio.Services
 @inject TerminalCommandService CommandService
 @inject NavigationManager Navigation
+@inject LocaleService LocaleService
 @rendermode InteractiveServer
 
 <PageTitle>About - Hyunjo Jung</PageTitle>
@@ -34,8 +35,8 @@
        |___/                |__/
             </pre>
             <div class="about-meta">
-                <span class="meta-item"><span class="meta-label">role:</span> <span class="meta-value">Fullstack Developer</span></span>
-                <span class="meta-item"><span class="meta-label">focus:</span> <span class="meta-value">AI Integration | Cloud Services</span></span>
+                <span class="meta-item"><span class="meta-label">@(currentCulture == "ko" ? "역할" : "role"):</span> <span class="meta-value">@(currentCulture == "ko" ? "풀스택 개발자" : "Fullstack Developer")</span></span>
+                <span class="meta-item"><span class="meta-label">@(currentCulture == "ko" ? "전문분야" : "focus"):</span> <span class="meta-value">@(currentCulture == "ko" ? "AI 통합 | 클라우드 서비스" : "AI Integration | Cloud Services")</span></span>
                 <span class="meta-item"><span class="meta-label">github:</span> <a href="https://github.com/HyunjoJung" target="_blank" class="meta-link">@@HyunjoJung</a></span>
             </div>
         </section>
@@ -44,25 +45,43 @@
             <div class="section-header">
                 <span class="prompt">#</span> whoami
             </div>
-            <p class="about-description">Fullstack developer with expertise in AI integration and cloud-based services. Currently working at a PR agency, focusing on automation systems and data-driven solutions.</p>
-            <div class="about-list">
-                <div class="list-item">
-                    <span class="list-bullet">></span> Samsung Software Academy For Youth (SSAFY) 11th - Graduated with honors
+            @if (currentCulture == "ko")
+            {
+                <p class="about-description">AI 통합 및 클라우드 기반 서비스 전문 풀스택 개발자. 현재 PR 에이전시에서 자동화 시스템과 데이터 기반 솔루션을 개발하고 있습니다.</p>
+                <div class="about-list">
+                    <div class="list-item">
+                        <span class="list-bullet">></span> 삼성 청년 SW 아카데미 (SSAFY) 11기 - 우수 수료
+                    </div>
+                    <div class="list-item">
+                        <span class="list-bullet">></span> 관심사: 풀스택 개발, AI 통합, 클라우드 서비스
+                    </div>
+                    <div class="list-item">
+                        <span class="list-bullet">></span> 빅데이터 분석기사 (2023)
+                    </div>
                 </div>
-                <div class="list-item">
-                    <span class="list-bullet">></span> Interests: Fullstack Development, AI Integration, Cloud Services
+            }
+            else
+            {
+                <p class="about-description">Fullstack developer with expertise in AI integration and cloud-based services. Currently working at a PR agency, focusing on automation systems and data-driven solutions.</p>
+                <div class="about-list">
+                    <div class="list-item">
+                        <span class="list-bullet">></span> Samsung Software Academy For Youth (SSAFY) 11th - Graduated with honors
+                    </div>
+                    <div class="list-item">
+                        <span class="list-bullet">></span> Interests: Fullstack Development, AI Integration, Cloud Services
+                    </div>
+                    <div class="list-item">
+                        <span class="list-bullet">></span> Certified Big Data Analyst (2023)
+                    </div>
                 </div>
-                <div class="list-item">
-                    <span class="list-bullet">></span> Certified Big Data Analyst (2023)
-                </div>
-            </div>
+            }
         </section>
 
     <section class="projects-section">
         <div class="section-header">
-            <span class="prompt">#</span> Personal Projects
+            <span class="prompt">#</span> @(currentCulture == "ko" ? "개인 프로젝트" : "Personal Projects")
         </div>
-        <p class="section-subtitle">Production-ready applications built with modern tech stacks</p>
+        <p class="section-subtitle">@(currentCulture == "ko" ? "최신 기술 스택으로 구축한 프로덕션 레벨 애플리케이션" : "Production-ready applications built with modern tech stacks")</p>
 
         <div class="projects-grid">
             <div class="project-card">
@@ -123,9 +142,9 @@
 
     <section class="work-section">
         <div class="section-header">
-            <span class="prompt">#</span> Professional Experience
+            <span class="prompt">#</span> @(currentCulture == "ko" ? "경력" : "Professional Experience")
         </div>
-        <p class="section-subtitle">Enterprise-scale projects at a PR agency</p>
+        <p class="section-subtitle">@(currentCulture == "ko" ? "PR 에이전시에서 진행한 엔터프라이즈급 프로젝트" : "Enterprise-scale projects at a PR agency")</p>
 
         <div class="work-grid">
             <div class="work-card">
@@ -203,7 +222,7 @@
 
     <section class="skills-section">
         <div class="section-header">
-            <span class="prompt">#</span> Tech Stack
+            <span class="prompt">#</span> @(currentCulture == "ko" ? "기술 스택" : "Tech Stack")
         </div>
 
         <div class="skills-grid">
@@ -246,7 +265,7 @@
 
     <section class="awards-section">
         <div class="section-header">
-            <span class="prompt">#</span> Awards & Certifications
+            <span class="prompt">#</span> @(currentCulture == "ko" ? "수상 및 자격증" : "Awards & Certifications")
         </div>
 
         <div class="awards-grid">
@@ -294,7 +313,7 @@
 
     <section class="research-section">
         <div class="section-header">
-            <span class="prompt">#</span> Research Publications
+            <span class="prompt">#</span> @(currentCulture == "ko" ? "연구 논문" : "Research Publications")
         </div>
         <div class="research-list">
             <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11784072" target="_blank" class="research-item">
@@ -338,6 +357,12 @@
     private string terminalInput = string.Empty;
     private ElementReference terminalInputElement;
     private string commandOutput = string.Empty;
+    private string currentCulture = "en";
+
+    protected override void OnInitialized()
+    {
+        currentCulture = LocaleService.GetCurrentCultureCode();
+    }
 
     private async Task HandleTerminalKeyDown(KeyboardEventArgs e)
     {
