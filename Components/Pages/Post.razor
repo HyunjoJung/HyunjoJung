@@ -140,6 +140,14 @@
                     @((MarkupString)post.Content)
                 </div>
 
+                @* Show AdSense only for posts with sufficient content (2+ min read time) *@
+                @if (post.ReadTimeMinutes >= 2)
+                {
+                    <div style="margin: 2rem 0;">
+                        <AdSense SlotId="9311247083" Format="auto" />
+                    </div>
+                }
+
                 <footer class="post-footer">
                     <div class="footer-divider">─────────────────────────────────────────────</div>
                     <div class="footer-meta">
