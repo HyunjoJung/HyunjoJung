@@ -92,6 +92,23 @@ builder.Services.AddScoped<LocaleService>();
 
 var app = builder.Build();
 
+// HEAD request support for SEO crawlers (MUST BE FIRST!)
+app.Use(async (context, next) =>
+{
+    var originalMethod = context.Request.Method;
+    if (HttpMethods.IsHead(context.Request.Method))
+    {
+        context.Request.Method = HttpMethods.Get;
+    }
+
+    await next();
+
+    if (HttpMethods.IsHead(originalMethod))
+    {
+        context.Response.Body = Stream.Null;
+    }
+});
+
 // Configure Forwarded Headers for proxy servers like Cloudflare/Nginx
 var forwardedHeadersOptions = new ForwardedHeadersOptions
 {
@@ -163,8 +180,37 @@ app.MapGet("/logout", async (HttpContext context) =>
     context.Response.Redirect("/");
 });
 
-// Sitemap endpoint
-app.MapGet("/sitemap.xml", async (BlogService blogService) =>
+// robots.txt endpoint (supports both GET and HEAD)
+app.MapMethods("/robots.txt", new[] { "GET", "HEAD" }, () =>
+{
+    var robotsTxt = @"User-agent: *
+Allow: /
+
+# AI Crawlers - explicitly allow for AEO (Answer Engine Optimization)
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://hyunjo.uk/sitemap.xml";
+    return Results.Text(robotsTxt, "text/plain");
+}).DisableAntiforgery();
+
+// Sitemap endpoint (supports both GET and HEAD)
+app.MapMethods("/sitemap.xml", new[] { "GET", "HEAD" }, async (BlogService blogService) =>
 {
     var baseUrl = "https://hyunjo.uk";
     var posts = await blogService.GetAllPostsAsync();
@@ -215,6 +261,6 @@ app.MapGet("/sitemap.xml", async (BlogService blogService) =>
     sitemap.AppendLine("</urlset>");
 
     return Results.Content(sitemap.ToString(), "application/xml");
-});
+}).DisableAntiforgery();
 
 app.Run();
