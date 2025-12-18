@@ -1,4 +1,23 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@code {
+    private bool IsBot()
+    {
+        var userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString() ?? "";
+        return userAgent.Contains("bot", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("crawler", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("spider", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("ChatGPT", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("GPTBot", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("Claude", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("Perplexity", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("Applebot", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("anthropic", StringComparison.OrdinalIgnoreCase);
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en" style="background-color: #282a36 !important; margin: 0; padding: 0;">
 
 <head>
@@ -45,31 +64,23 @@
 <body style="background-color: #282a36 !important; margin: 0; padding: 0;">
     <Routes />
 
-    <!-- Content is visible even without JavaScript (for crawlers/bots) -->
-    <noscript>
-        <div style="padding: 20px; background: #44475a; color: #f8f8f2; margin: 20px; border-radius: 5px;">
-            This site works best with JavaScript enabled, but all content is accessible without it.
-        </div>
-    </noscript>
+    @if (!IsBot())
+    {
+        <!-- Content is visible even without JavaScript (for crawlers/bots) -->
+        <noscript>
+            <div style="padding: 20px; background: #44475a; color: #f8f8f2; margin: 20px; border-radius: 5px;">
+                This site works best with JavaScript enabled, but all content is accessible without it.
+            </div>
+        </noscript>
 
-    <ReconnectModal />
+        <ReconnectModal />
+    }
 
-    <!-- Load Blazor script asynchronously, non-blocking -->
-    <!-- For bots/crawlers, content is already visible via prerendering -->
-    <script data-blazor-src="@Assets["_framework/blazor.web.js"]">
-        // Detect if user is a bot/crawler - if so, skip Blazor loading for faster response
-        var ua = navigator.userAgent.toLowerCase();
-        var isBot = /bot|crawler|spider|crawling|googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver|ChatGPT|Claude|Perplexity/i.test(ua);
-
-        if (!isBot) {
-            // Load Blazor only for real users
-            var script = document.createElement('script');
-            var blazorSrc = document.currentScript.getAttribute('data-blazor-src');
-            script.src = blazorSrc;
-            script.defer = true;
-            document.body.appendChild(script);
-        }
-    </script>
+    @if (!IsBot())
+    {
+        <!-- Load Blazor script for real users only -->
+        <script src="@Assets["_framework/blazor.web.js"]" defer></script>
+    }
 </body>
 
 </html>
