@@ -92,20 +92,36 @@ builder.Services.AddScoped<LocaleService>();
 
 var app = builder.Build();
 
-// HEAD request support for SEO crawlers (MUST BE FIRST!)
+// HEAD request support - MUST BE ABSOLUTE FIRST before ANY middleware!
 app.Use(async (context, next) =>
 {
-    var originalMethod = context.Request.Method;
-    if (HttpMethods.IsHead(context.Request.Method))
+    if (string.Equals(context.Request.Method, "HEAD", StringComparison.OrdinalIgnoreCase))
     {
-        context.Request.Method = HttpMethods.Get;
-    }
+        // Convert HEAD to GET for routing/middleware
+        context.Request.Method = "GET";
 
-    await next();
-
-    if (HttpMethods.IsHead(originalMethod))
-    {
+        // Suppress response body
+        var originalStream = context.Response.Body;
         context.Response.Body = Stream.Null;
+
+        try
+        {
+            await next();
+
+            // Ensure status code is set
+            if (context.Response.StatusCode == 0)
+            {
+                context.Response.StatusCode = 200;
+            }
+        }
+        finally
+        {
+            context.Response.Body = originalStream;
+        }
+    }
+    else
+    {
+        await next();
     }
 });
 
@@ -121,6 +137,9 @@ app.UseForwardedHeaders(forwardedHeadersOptions);
 
 // Use Request Localization
 app.UseRequestLocalization();
+
+// Explicit routing AFTER HEAD middleware
+app.UseRouting();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -161,6 +180,7 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
