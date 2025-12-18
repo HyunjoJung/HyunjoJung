@@ -1,4 +1,34 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Http
+@inherits LayoutComponentBase
+@inject IHttpContextAccessor HttpContextAccessor
+
+@code {
+    private bool IsBot()
+    {
+        var userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString() ?? "";
+
+        if (string.IsNullOrWhiteSpace(userAgent))
+        {
+            return true;
+        }
+
+        return userAgent.Contains("bot", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("crawler", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("spider", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("ChatGPT", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("GPTBot", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("Claude", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("Perplexity", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("Applebot", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("anthropic", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("OpenAI", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("AI-", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("python", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("requests", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("curl", StringComparison.OrdinalIgnoreCase) ||
+               userAgent.Contains("wget", StringComparison.OrdinalIgnoreCase);
+    }
+}
 
 <div class="page">
     <main>
@@ -8,8 +38,11 @@
     </main>
 </div>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+@if (!IsBot())
+{
+    <div id="blazor-error-ui" data-nosnippet>
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+}

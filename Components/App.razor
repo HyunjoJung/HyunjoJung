@@ -1,19 +1,50 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.Logging
 @inject IHttpContextAccessor HttpContextAccessor
+@inject ILogger<App> Logger
 
 @code {
     private bool IsBot()
     {
         var userAgent = HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString() ?? "";
-        return userAgent.Contains("bot", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("crawler", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("spider", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("ChatGPT", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("GPTBot", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("Claude", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("Perplexity", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("Applebot", StringComparison.OrdinalIgnoreCase) ||
-               userAgent.Contains("anthropic", StringComparison.OrdinalIgnoreCase);
+
+        // Log User-Agent for debugging
+        Logger.LogInformation($"User-Agent: {userAgent}");
+
+        // Very broad bot detection - if no User-Agent or contains common bot keywords
+        if (string.IsNullOrWhiteSpace(userAgent))
+        {
+            Logger.LogInformation("Empty User-Agent - treating as bot");
+            return true;
+        }
+
+        var isBot = userAgent.Contains("bot", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("crawler", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("spider", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("ChatGPT", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("GPTBot", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("Claude", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("Perplexity", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("Applebot", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("anthropic", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("OpenAI", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("AI-", StringComparison.OrdinalIgnoreCase) ||
+                   // Python requests/urllib (often used by scrapers)
+                   userAgent.Contains("python", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("requests", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("curl", StringComparison.OrdinalIgnoreCase) ||
+                   userAgent.Contains("wget", StringComparison.OrdinalIgnoreCase);
+
+        if (isBot)
+        {
+            Logger.LogInformation($"✅ Detected as BOT: {userAgent}");
+        }
+        else
+        {
+            Logger.LogInformation($"❌ NOT a bot (regular user): {userAgent}");
+        }
+
+        return isBot;
     }
 }
 
