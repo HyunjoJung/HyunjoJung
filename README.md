@@ -30,11 +30,11 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
 
 ### 💻 Frontend
-![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
 
 ---
 
@@ -72,8 +72,8 @@ Stateless business card generator that transforms Excel employee data into Power
 | 2024.10 | Samsung Electronics KITECH Project: AI Auto Labeler - **Excellence Award** |
 | 2024.08 | Pet Care Service Project - **Excellence Award** |
 | 2024.05 | Financial Comparison Platform 'FINFO' - **Grand Prize** |
-| 2023.12 | **Big Data Analysis Engineer** Certification |
 | 2025.06 | **SQLD** Certification |
+| 2023.12 | **Big Data Analysis Engineer** Certification |
 | 2023.08 | LLM-based Civil Complaint Improvement - Participation Prize (KDATA) |
 | 2022.03 | **ADsP** (Advanced Data Analytics Professional) Certification |
 
@@ -95,7 +95,7 @@ Stateless business card generator that transforms Excel employee data into Power
 ```
 🔥 Current Streak: Active contributor
 📊 Total Contributions: See profile for latest stats
-🌟 Most Used Languages: C#, Python, TypeScript, JavaScript
+🌟 Most Used Languages: Python, TypeScript, JavaScript
 📦 Public Repositories: Check out my pinned projects below
 ```
 
