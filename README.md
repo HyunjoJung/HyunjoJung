@@ -1,7 +1,7 @@
 # 정현조 · Hyunjo Jung
 
-> 공공데이터와 AI로 실제 운영되는 서비스를 만드는 개발자
-> *Building real, in-production services with public data + AI*
+> AI로 실제 운영되는 서비스를 만드는 개발자
+> *Building real, in-production services with AI*
 
 ![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
